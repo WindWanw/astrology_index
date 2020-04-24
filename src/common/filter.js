@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: ww
+ * @date: 
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-04-24 10:06:36
+ */
 //获取性别
 const getSexStatus = (status) => status = '0' ? '女' : '男';
 
@@ -20,21 +28,21 @@ const getColor = color => {
             return 'danger';
             break;
         default:
-            return '';
+            return 'warning';
     }
 }
 
-//获取文章类型
-const getArticleType = (type) => {
-    switch (String(type)) {
-        case '1':
-            return '原创';
+//获取认证状态
+const getAuthStatus = (status) => {
+    switch (status) {
+        case 0:
+            return '待审核';
             break;
-        case '2':
-            return '转载';
+        case 1:
+            return '已通过';
             break;
-        case '3':
-            return '翻译';
+        case 2:
+            return '未通过';
             break;
         default:
             return '未定义';
@@ -66,6 +74,6 @@ const getArticleModality = modal => {
 export default {
     getSexStatus,
     getColor,
-    getArticleType,
+    getAuthStatus,
     getArticleModality
 }

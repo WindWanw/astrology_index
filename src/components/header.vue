@@ -30,7 +30,7 @@
       <span class="username">{{userInfo.username}}</span>
       <el-dropdown>
         <span class="el-dropdown-link">
-          <i class="iconfont iconxiala2"></i>
+          <i class="iconfont iconqiehuanzuhu"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
@@ -40,7 +40,7 @@
           </el-dropdown-item>
           <el-dropdown-item>
             <span @click="loginout">
-              <i class="iconfont icontuichu"></i>退出登录
+              <i class="iconfont icontuichu3"></i>退出登录
             </span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -109,7 +109,7 @@ export default {
   justify-content: space-between;
 }
 .iconfont.iconcaidan {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 600;
   color: #fff;
   margin-left: 50px;
@@ -125,15 +125,14 @@ export default {
 .right .username {
   margin: 0 10px;
 }
-.iconfont.iconxiala2 {
-  font-size: 18px;
+.iconfont.iconqiehuanzuhu {
+  font-size: 20px;
   cursor: pointer;
+  color: #fff;
+  padding: 5px;
 }
 .icontuichu {
   font-size: 12px;
   color: #fff;
-}
-.iconcaidan{
-  font-size: 18px;
 }
 </style>

@@ -126,24 +126,7 @@ export default {
   background-color: #409eff;
   height: 50px;
 }
-.text {
-  text-align: center;
-  margin: 10px 0;
-  color: white;
-}
-.qrcode-img {
-  width: 150px;
-  height: 150px;
-  margin: 20px auto;
-}
-.image {
-  width: 100%;
-  height: 100%;
-}
-.qrcode-img p {
-  width: 150px;
-  font-size: 10px;
-  text-align: center;
-  color: grey;
+.iconfont.icongeren.iconxiugaimima1 {
+    margin: 5px;
 }
 </style>

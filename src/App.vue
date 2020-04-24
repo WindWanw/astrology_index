@@ -1,3 +1,11 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: ww
+ * @date: 
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-04-24 10:51:19
+ -->
 <template>
   <div id="app">
     <router-view />
@@ -84,8 +92,14 @@ html,
   width: 200px;
 
 }
-.el-input--mini .el-input__inner {
+.el-select>.el-input {
+    display: block;
     width: 200px;
 }
-
+.iconbianji1:before {
+    margin: 0 5px;
+}
+.iconshanchu1:before {
+     margin: 0 5px;
+}
 </style>

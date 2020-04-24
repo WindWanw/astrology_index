@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: ww
+ * @date: 
+ * @LastEditors: 
+ * @LastEditTime: 2020-04-24 11:13:30
+ */
 import Vue from 'vue';
 import axios from 'axios';
 import router from '../router';
@@ -40,7 +48,9 @@ axios.interceptors.response.use(response => {
 	if (token) {
 		localStorage.setItem('token', token); //将token保存到缓存中
 	}
-
+	if (response.data.code == '0000') {
+		response.data.code = parseInt(response.data.code)
+	}
 	return response.data;
 }, error => {
 	//laravel框架，出现错误时返回状态422，不返回自定义code

@@ -29,6 +29,7 @@
         ></el-input>
         <el-select
           class="search_warp_default"
+          style="width:200px;"
           v-model="search.type"
           size="mini"
           clearable
@@ -42,14 +43,24 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-radio-group v-model="search.status" class="search_warp_radio">
-          <el-radio :label="0">申请认证</el-radio>
-          <el-radio :label="1">认证通过</el-radio>
-          <el-radio :label="2">认证失败</el-radio>
-        </el-radio-group>
+        <el-select
+          class="search_warp_default"
+          v-model="search.status"
+          size="mini"
+          clearable
+          placeholder="请选择审核状态"
+          @keyup.enter.native="findData"
+        >
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.key"
+            :value="item.value"
+          ></el-option>
+        </el-select>
         <el-button
           type="success"
-          class="iconfont iconchakan1"
+          class="iconfont iconsearch"
           size="mini"
           @click="findData"
           style="margin-left:5px;"
@@ -74,23 +85,32 @@
         <el-table-column prop="company_card" label="企业认证账号" align="center"></el-table-column>
         <el-table-column prop="created_at" label="创建时间" align="center"></el-table-column>
         <el-table-column prop="check_time" label="审核时间" align="center"></el-table-column>
-        <el-table-column prop="status" label="审核状态" align="center"></el-table-column>
+        <el-table-column prop="status" label="审核状态" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.status | getColor"
+              size="small"
+            >{{scope.row.status | getAuthStatus}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
-              title="编辑用户信息"
-              type="primary"
-              size="mini"
-              class="iconfont iconbianji1"
-              @click="openEditArticle(scope.row)"
-            >编辑</el-button>
+              v-if="scope.row.status==0"
+              title="企业认证审核"
+              type="warning"
+              size="medium"
+              class="iconfont iconshenhe2"
+              @click="openAuthInfo(scope.row)"
+            >审核</el-button>
             <el-button
-              title="删除用户"
-              type="danger"
-              size="mini"
-              class="iconfont iconshanchu1"
-              @click="destroy(scope.row.id)"
-            >删除</el-button>
+              v-else
+              title="查看企业认证"
+              :type="scope.row.status | getColor"
+              size="medium"
+              class="iconfont iconshenhe3"
+              @click="openAuthInfo(scope.row)"
+            >查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -105,6 +125,74 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="dataList.total"
       ></el-pagination>
+      <!--审核界面-->
+      <el-dialog
+        title="企业认证审核"
+        :visible.sync="authInfoDialog"
+        v-loading="loading"
+        top="30px"
+        width="30%"
+        :before-close="beforeCloseDialog"
+        @close="closeDialog()"
+      >
+        <div>
+          <el-form label-position="left" label-width="120px" :model="form">
+            <el-form-item label="企业名称" prop="company_name">
+              <el-input v-model="form.company_name" size="mini" readonly></el-input>
+            </el-form-item>
+            <el-form-item label="企业类型" prop="type">
+              <el-input v-model="form.type" size="mini" readonly></el-input>
+            </el-form-item>
+            <el-form-item label="企业法人" prop="truename">
+              <el-input v-model="form.truename" size="mini" readonly></el-input>
+            </el-form-item>
+            <el-form-item label="联系人" prop="name">
+              <el-input v-model="form.name" size="mini" readonly></el-input>
+            </el-form-item>
+            <el-form-item label="联系人电话" prop="phone">
+              <el-input v-model="form.phone" size="mini" readonly></el-input>
+            </el-form-item>
+            <el-form-item label="企业认证账号" prop="company_card">
+              <el-input v-model="form.company_card" size="mini" readonly></el-input>
+            </el-form-item>
+            <el-form-item label="审核结果" prop="status">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="(item,index) in statusList"
+                  :key="index"
+                  :label="item.value"
+                >{{item.key}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="审核反馈" prop="remark">
+              <el-input
+                type="textarea"
+                :row="3"
+                placeholder="退回修改或不通过原因"
+                v-model="form.remark"
+                :autosize="{ minRows: 3, maxRows: 5}"
+                maxlength="200"
+                show-word-limit
+              ></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer btn">
+          <el-button
+            v-if="!isStatus"
+            class="iconfont iconiconfontzhizuobiaozhunbduan20"
+            size="mini"
+            type="success"
+            @click="auditEnterpriseCertification()"
+          >确定修改</el-button>
+          <el-button
+            class="iconfont iconcancel1"
+            size="mini"
+            type="danger"
+            @click="authInfoDialog = false"
+          >返 回</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -117,8 +205,14 @@ export default {
       loading: false,
       isShow: false,
       isClear: false,
+      isStatus:0,
       dataList: [],
       qualificationList: [],
+      statusList: [
+        { key: "待审核", value: "0" },
+        { key: "未通过", value: "2" },
+        { key: "已通过", value: "1" }
+      ],
       search: {
         page: 1,
         limit: 10,
@@ -129,15 +223,16 @@ export default {
       },
       form: {
         id: "",
-        title: "", //文章标题
-        pics: "", //文章封面
-        about: "", //简介
-        info: "", //文章内容
-        tags: [], //文章标签
-        type: "", //文章类型
-        modality: "", //文章发布类型
-        status: "" //文章发布状态
+        company_name: "",
+        type: "",
+        truename: "",
+        name: "",
+        phone: "",
+        company_card: "",
+        status: "",
+        remark: ""
       },
+      authInfoDialog: false //打开企业认证dialog
     };
   },
   watch: {},
@@ -164,6 +259,15 @@ export default {
       this.getDataList();
       this.isShow = true;
     },
+    beforeCloseDialog(done) {
+      this.$confirm("确定要关闭吗？").then(_ => {
+        done();
+      });
+    },
+    //关闭dialog
+    closeDialog() {
+      this.$func.setDefaultData(this.form);
+    },
     //获取数据列表
     getDataList() {
       this.loading = true;
@@ -177,6 +281,20 @@ export default {
     getQualificationCategory() {
       this.$api.getQualificationCategory().then(res => {
         this.qualificationList = res.data.info || [];
+      });
+    },
+    //打开审核详细
+    openAuthInfo(data) {
+      this.form = this.$func.setAssignData(this.form, data);
+      this.isStatus=data.status;
+      this.authInfoDialog = true;
+    },
+    //审核
+    auditEnterpriseCertification() {
+      this.$api.auditEnterpriseCertification(this.form).then(res => {
+        this.$message[res.code ? 'error' : 'success'](res.data.message)
+        this.authInfoDialog=false;
+        this.getDataList();
       });
     }
   },
@@ -234,8 +352,10 @@ export default {
   padding: 5px;
 }
 .el-radio-group {
-    display: flex;
-    padding: 5px;
+  display: flex;
+  padding: 5px;
 }
-
+.el-dialog__footer {
+  text-align: left;
+}
 </style>
