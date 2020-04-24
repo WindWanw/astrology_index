@@ -44,7 +44,29 @@ const asyRoute = [{
 		    },
 		}
 		]
-	},
+    },
+    {
+        path: '/serviceManage',
+        name: 'serviceManage',
+        component: route.serviceManage,
+        meta: {
+            parent: '',
+            name: '服务管理',
+            iconfont: 'iconfont iconfuwu1',
+            needLogin: true, //需要登录
+        },
+        children: [{
+            path: '/education',
+            name: 'education',
+            component: route.education,
+            meta: {
+                parent: '服务管理',
+                name: '学历提升',
+                iconfont: 'iconfont iconxueli',
+                needLogin: true, //需要登录
+            },
+        }]
+    },
     // {
     //     path: '/userManage',
     //     name: 'userManage',

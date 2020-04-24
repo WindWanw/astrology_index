@@ -76,43 +76,25 @@
         v-loading="loading"
         class="user-table"
       >
-        <el-table-column prop="id" label="ID" align="center"></el-table-column>
-        <el-table-column prop="company_name" label="企业名称" align="center"></el-table-column>
-        <el-table-column prop="type" label="企业类型" align="center"></el-table-column>
-        <el-table-column prop="truename" label="企业法人" align="center"></el-table-column>
-        <el-table-column prop="name" label="联系人" align="center"></el-table-column>
+        <el-table-column prop="id" label="序号" align="center"></el-table-column>
+        <el-table-column prop="name" label="姓名" align="center"></el-table-column>
+        <el-table-column prop="sex" label="性别" align="center">
+          <template slot-scope="scope">
+            <el-tag >{{scope.row.sex | getSexStatus}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="examination_category" label="报考类别" align="center"></el-table-column>
+        <el-table-column prop="school" label="报考医院学校" align="center"></el-table-column>
+        <el-table-column prop="professional" label="报考专业" align="center"></el-table-column>
         <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
-        <el-table-column prop="company_card" label="企业认证账号" align="center"></el-table-column>
+        <el-table-column prop="rederees_phone" label="推荐人电话" align="center"></el-table-column>
+        <el-table-column prop="userPhone" label="会员账号" align="center">
+          <template slot-scope="scope">
+            {{scope.row.user.phone}}
+          </template>
+        </el-table-column>
         <el-table-column prop="created_at" label="创建时间" align="center"></el-table-column>
-        <el-table-column prop="check_time" label="审核时间" align="center"></el-table-column>
-        <el-table-column prop="status" label="审核状态" align="center">
-          <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.status | getColor"
-              size="small"
-            >{{scope.row.status | getAuthStatus}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button
-              v-if="scope.row.status==0"
-              title="企业认证审核"
-              type="warning"
-              size="medium"
-              class="iconfont iconshenhe2"
-              @click="openAuthInfo(scope.row)"
-            >审核</el-button>
-            <el-button
-              v-else
-              title="查看企业认证"
-              :type="scope.row.status | getColor"
-              size="medium"
-              class="iconfont iconshenhe3"
-              @click="openAuthInfo(scope.row)"
-            >查看</el-button>
-          </template>
-        </el-table-column>
+       
       </el-table>
 
       <el-pagination
@@ -125,74 +107,6 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="dataList.total"
       ></el-pagination>
-      <!--审核界面-->
-      <el-dialog
-        title="企业认证审核"
-        :visible.sync="authInfoDialog"
-        v-loading="loading"
-        top="30px"
-        width="30%"
-        :before-close="beforeCloseDialog"
-        @close="closeDialog()"
-      >
-        <div>
-          <el-form label-position="left" label-width="120px" :model="form">
-            <el-form-item label="企业名称" prop="company_name">
-              <el-input v-model="form.company_name" size="mini" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="企业类型" prop="type">
-              <el-input v-model="form.type" size="mini" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="企业法人" prop="truename">
-              <el-input v-model="form.truename" size="mini" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="联系人" prop="name">
-              <el-input v-model="form.name" size="mini" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="联系人电话" prop="phone">
-              <el-input v-model="form.phone" size="mini" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="企业认证账号" prop="company_card">
-              <el-input v-model="form.company_card" size="mini" readonly></el-input>
-            </el-form-item>
-            <el-form-item label="审核结果" prop="status">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="(item,index) in statusList"
-                  :key="index"
-                  :label="item.value"
-                >{{item.key}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="审核反馈" prop="remark">
-              <el-input
-                type="textarea"
-                :row="3"
-                placeholder="退回修改或不通过原因"
-                v-model="form.remark"
-                :autosize="{ minRows: 3, maxRows: 5}"
-                maxlength="200"
-                show-word-limit
-              ></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-        <span slot="footer" class="dialog-footer btn">
-          <el-button
-            v-if="!isStatus"
-            class="iconfont iconiconfontzhizuobiaozhunbduan20"
-            size="mini"
-            type="success"
-            @click="auditEnterpriseCertification()"
-          >确定修改</el-button>
-          <el-button
-            class="iconfont iconcancel1"
-            size="mini"
-            type="danger"
-            @click="authInfoDialog = false"
-          >返 回</el-button>
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -258,20 +172,10 @@ export default {
       this.getDataList();
       this.isShow = true;
     },
-    beforeCloseDialog(done) {
-      this.$confirm("确定要关闭吗？").then(_ => {
-        done();
-      });
-    },
-    //关闭dialog
-    closeDialog() {
-      this.$func.setDefaultData(this.form);
-    },
     //获取数据列表
     getDataList() {
       this.loading = true;
-      this.$api.getEnterpriseAuth(this.search).then(res => {
-        console.log(res.data.data);
+      this.$api.getEducationList(this.search).then(res => {
         this.dataList = res.data || [];
         this.loading = false;
       });
@@ -282,20 +186,6 @@ export default {
         this.qualificationList = res.data.info || [];
       });
     },
-    //打开审核详细
-    openAuthInfo(data) {
-      this.form = this.$func.setAssignData(this.form, data);
-      this.isStatus=data.status;
-      this.authInfoDialog = true;
-    },
-    //审核
-    auditEnterpriseCertification() {
-      this.$api.auditEnterpriseCertification(this.form).then(res => {
-        this.$message[res.code ? 'error' : 'success'](res.data.message)
-        this.authInfoDialog=false;
-        this.getDataList();
-      });
-    }
   },
   created() {
     this.getDataList();

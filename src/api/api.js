@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 11:31:52
+ * @LastEditTime: 2020-04-24 11:44:50
  */
 import { fetchPost, fetchGet } from './fetch';
 
@@ -33,6 +33,10 @@ export default {
     //个人认证审核列表
     getUserAuth(params) {
         return fetchGet('audit/user/certification/list', params);
+    },
+    //个人认证审核列表
+    getEducationList(params) {
+        return fetchGet('education/education/list', params);
     },
 
 }

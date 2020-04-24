@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: ww
+ * @date: 
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-04-24 11:38:46
+ */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
 const notFound = () =>
@@ -19,6 +27,14 @@ const enterpriseAuth = () =>
 const userAuth = () =>
 	import( /* webpackChunkName: "userAuth" */ '../views/authManage/userAuth.vue')
 
+/**************************服务管理**************************/
+//认证管理
+const serviceManage = () =>
+	import( /* webpackChunkName: "serviceManage" */ '../views/serviceManage')
+//企业认证
+const education = () =>
+	import( /* webpackChunkName: "education" */ '../views/serviceManage/education.vue')
+
 
 export default {
 	login,
@@ -28,5 +44,8 @@ export default {
 	
 	authManage,
 	enterpriseAuth,
-	userAuth
+	userAuth,
+
+	serviceManage,
+	education,
 }
