@@ -2,7 +2,7 @@
   <div class="header theme-bg-blue">
     <div class="left">
       <el-dropdown trigger="click" :hide-on-click="false">
-        <div class="logo">Astrology</div>
+        <div class="logo">广盈集团</div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item icon="iconfont iconcaidan">
             <el-tooltip content="点击切换menu栏" placement="top">

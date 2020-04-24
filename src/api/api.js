@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 15:18:00
+ * @LastEditTime: 2020-04-24 17:04:48
  */
 import {
     fetchPost,
@@ -57,6 +57,10 @@ export default {
     //求职列表
     getJobsList(params) {
         return fetchGet('post/post/jobs/list', params);
+    },
+    //后天权限角色列表
+    getRoleList(params) {
+        return fetchGet('authority/get/role/list', params);
     },
 
 }

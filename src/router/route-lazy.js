@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 14:23:30
+ * @LastEditTime: 2020-04-24 16:36:41
  */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
@@ -15,17 +15,34 @@ const layout = () =>
 const home = () =>
 	import( /* webpackChunkName: "home" */ '../views/home.vue')
 
+/**************************用户管理**************************/
+//用户管理
+const userManage = () =>
+	import( /* webpackChunkName: "userManage" */ '../views/userManage')
+/**************************权限管理**************************/
+//权限管理
+const authorityManage = () =>
+	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage')
+//用户设置
+const adminUser = () =>
+	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage/adminUser.vue')
+//权限设置
+const adminRole = () =>
+	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage/adminRole.vue')
+//菜单设置
+const adminMenu = () =>
+	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage/adminMenu.vue')
 
 /**************************认证管理**************************/
 //认证管理
-const authManage = () =>
-	import( /* webpackChunkName: "authManage" */ '../views/authManage')
+const checkManage = () =>
+	import( /* webpackChunkName: "checkManage" */ '../views/checkManage')
 //企业认证
 const enterpriseAuth = () =>
-	import( /* webpackChunkName: "enterpriseAuth" */ '../views/authManage/enterpriseAuth.vue')
+	import( /* webpackChunkName: "enterpriseAuth" */ '../views/checkManage/enterpriseAuth.vue')
 //个人认证
 const userAuth = () =>
-	import( /* webpackChunkName: "userAuth" */ '../views/authManage/userAuth.vue')
+	import( /* webpackChunkName: "userAuth" */ '../views/checkManage/userAuth.vue')
 
 /**************************服务管理**************************/
 //认证管理
@@ -46,13 +63,23 @@ const jobs = () =>
 	import( /* webpackChunkName: "jobs" */ '../views/postManage/jobs.vue')
 
 
+const systemManage = () =>
+	import( /* webpackChunkName: "systemManage" */ '../views/systemManage')
+
 export default {
 	login,
 	notFound,
 	layout,
 	home,
 
-	authManage,
+	userManage,
+
+	authorityManage,
+	adminUser,
+	adminRole,
+	adminMenu,
+
+	checkManage,
 	enterpriseAuth,
 	userAuth,
 
@@ -62,4 +89,12 @@ export default {
 	postManage,
 	recruitments,
 	jobs,
+
+
+
+
+
+
+
+	systemManage,
 }
