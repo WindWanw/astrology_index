@@ -4,10 +4,10 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 10:06:36
+ * @LastEditTime: 2020-04-24 13:34:10
  */
 //获取性别
-const getSexStatus = (status) => status = '0' ? '女' : '男';
+const getSexStatus = (status) => status == '0' ? '女' : '男';
 
 //标签、按钮颜色
 const getColor = color => {

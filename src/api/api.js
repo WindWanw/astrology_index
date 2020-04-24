@@ -4,9 +4,12 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 11:44:50
+ * @LastEditTime: 2020-04-24 15:18:00
  */
-import { fetchPost, fetchGet } from './fetch';
+import {
+    fetchPost,
+    fetchGet
+} from './fetch';
 
 export default {
     login(params) {
@@ -17,14 +20,19 @@ export default {
     },
 
     //公共接口
+    //资质类别，企业类别
     getQualificationCategory(params) {
         return fetchGet('common/get/qualification/category', params);
+    },
+    //学历类别
+    getExamCategory(params) {
+        return fetchGet('common/get/exam/category', params);
     },
 
 
     //企业认证审核列表
-    getEnterpriseAuth(params){
-        return fetchGet('audit/enterprise/certification/list',params);
+    getEnterpriseAuth(params) {
+        return fetchGet('audit/enterprise/certification/list', params);
     },
     //审核企业认证
     auditEnterpriseCertification(params) {
@@ -34,9 +42,21 @@ export default {
     getUserAuth(params) {
         return fetchGet('audit/user/certification/list', params);
     },
-    //个人认证审核列表
+    //学历提升列表
     getEducationList(params) {
         return fetchGet('education/education/list', params);
+    },
+    //招聘列表
+    getRecruitmentsList(params) {
+        return fetchGet('post/post/recruitments/list', params);
+    },
+    //置顶
+    setTop(params) {
+        return fetchGet('post/set/top', params);
+    },
+    //求职列表
+    getJobsList(params) {
+        return fetchGet('post/post/jobs/list', params);
     },
 
 }

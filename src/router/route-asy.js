@@ -11,39 +11,39 @@ const asyRoute = [{
         },
         children: []
     },
-	{
-	    path: '/authManage',
-	    name: 'authManage',
-	    component: route.authManage,
-	    meta: {
-	        parent: '',
-	        name: '认证管理',
-	        iconfont: 'iconfont iconrenzheng',
-	        needLogin: true, //需要登录
-	    },
-	    children: [{
-	        path: '/enterpriseAuth',
-	        name: 'enterpriseAuth',
-	        component: route.enterpriseAuth,
-	        meta: {
-	            parent: '认证管理',
-	            name: '企业认证',
-	            iconfont: 'iconfont iconqiyejianjie',
-	            needLogin: true, //需要登录
-	        },
-	    },
-		{
-		    path: '/userAuth',
-		    name: 'userAuth',
-		    component: route.userAuth,
-		    meta: {
-		        parent: '认证管理',
-		        name: '个人认证',
-		        iconfont: 'iconfont icongeren9',
-		        needLogin: true, //需要登录
-		    },
-		}
-		]
+    {
+        path: '/authManage',
+        name: 'authManage',
+        component: route.authManage,
+        meta: {
+            parent: '',
+            name: '认证管理',
+            iconfont: 'iconfont iconrenzheng',
+            needLogin: true, //需要登录
+        },
+        children: [{
+                path: '/enterpriseAuth',
+                name: 'enterpriseAuth',
+                component: route.enterpriseAuth,
+                meta: {
+                    parent: '认证管理',
+                    name: '企业认证',
+                    iconfont: 'iconfont iconqiyejianjie',
+                    needLogin: true, //需要登录
+                },
+            },
+            {
+                path: '/userAuth',
+                name: 'userAuth',
+                component: route.userAuth,
+                meta: {
+                    parent: '认证管理',
+                    name: '个人认证',
+                    iconfont: 'iconfont icongeren9',
+                    needLogin: true, //需要登录
+                },
+            }
+        ]
     },
     {
         path: '/serviceManage',
@@ -66,6 +66,40 @@ const asyRoute = [{
                 needLogin: true, //需要登录
             },
         }]
+    },
+    {
+        path: '/postManage',
+        name: 'postManage',
+        component: route.postManage,
+        meta: {
+            parent: '',
+            name: '发布管理',
+            iconfont: 'iconfont iconfabu-',
+            needLogin: true, //需要登录
+        },
+        children: [{
+                path: '/recruitments',
+                name: 'recruitments',
+                component: route.recruitments,
+                meta: {
+                    parent: '发布管理',
+                    name: '人才招聘',
+                    iconfont: 'iconfont iconzhaopin',
+                    needLogin: true, //需要登录
+                },
+            },
+            {
+                path: '/jobs',
+                name: 'jobs',
+                component: route.jobs,
+                meta: {
+                    parent: '发布管理',
+                    name: '人才求职',
+                    iconfont: 'iconfont iconqiuzhizhuangtai',
+                    needLogin: true, //需要登录
+                },
+            }
+        ]
     },
     // {
     //     path: '/userManage',

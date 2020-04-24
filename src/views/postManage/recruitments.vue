@@ -14,41 +14,33 @@
         <el-input
           class="search_warp_default"
           clearable
-          v-model="search.name"
-          placeholder="请输入姓名"
-          size="mini"
-          @keyup.enter.native="findData"
-        ></el-input>
-        <el-input
-          class="search_warp_default"
-          clearable
-          v-model="search.phone"
-          placeholder="请输入联系电话"
-          size="mini"
-          @keyup.enter.native="findData"
-        ></el-input>
-        <el-input
-          class="search_warp_default"
-          clearable
           v-model="search.user_phone"
-          placeholder="请输入会员账号"
+          placeholder="请输入发布人账号"
           size="mini"
           @keyup.enter.native="findData"
         ></el-input>
         <el-select
           class="search_warp_default"
-          v-model="search.examination_category"
+          style="width:200px;"
+          v-model="search.status"
           size="mini"
           clearable
-          placeholder="请选择报考类别"
+          placeholder="请选择招聘信息是否有效"
           @keyup.enter.native="findData"
         >
-          <el-option
-            v-for="item in examList"
-            :key="item.value"
-            :label="item.key"
-            :value="item.value"
-          ></el-option>
+          <el-option key="1" label="是" value="1"></el-option>
+          <el-option key="0" label="否" value="0"></el-option>
+        </el-select>
+        <el-select
+          class="search_warp_default"
+          v-model="search.top"
+          size="mini"
+          clearable
+          placeholder="请选择是否置顶"
+          @keyup.enter.native="findData"
+        >
+          <el-option key="1" label="是" value="1"></el-option>
+          <el-option key="0" label="否" value="0"></el-option>
         </el-select>
         <el-button
           type="success"
@@ -69,21 +61,46 @@
         class="user-table"
       >
         <el-table-column prop="id" label="序号" align="center"></el-table-column>
-        <el-table-column prop="name" label="姓名" align="center"></el-table-column>
-        <el-table-column prop="sex" label="性别" align="center">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.sex | getColor">{{scope.row.sex | getSexStatus}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="examination_category" label="报考类别" align="center"></el-table-column>
-        <el-table-column prop="school" label="报考医院学校" align="center"></el-table-column>
-        <el-table-column prop="professional" label="报考专业" align="center"></el-table-column>
-        <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
-        <el-table-column prop="rederees_phone" label="推荐人电话" align="center"></el-table-column>
-        <el-table-column prop="userPhone" label="会员账号" align="center">
+        <el-table-column prop="phone" label="发布人账号" align="center">
           <template slot-scope="scope">{{scope.row.user.phone}}</template>
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间" align="center"></el-table-column>
+        <el-table-column prop="company_name" label="企业名称" align="center"></el-table-column>
+        <el-table-column prop="professional" label="所需专业" align="center"></el-table-column>
+        <el-table-column prop="info" label="发布内容" align="center"></el-table-column>
+        <el-table-column prop="created_at" label="发布时间" align="center"></el-table-column>
+        <el-table-column prop="top" label="是否置顶" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.top=='0' ? 'danger' : 'success'"
+            >{{scope.row.top=='1' ? '是' : '否'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="是否有效" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.status=='0' ? 'danger' : 'success'"
+            >{{scope.row.status=='1' ? '是' : '否'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              :title="scope.row.top=='0' ? '置顶该招聘信息' : '取消置顶'"
+              :type="scope.row.top=='0' ? 'success' : 'danger'"
+              size="medium"
+              class="iconfont"
+              :class="scope.row.top=='0' ? 'iconzhiding2' : 'iconxiazai-'"
+              @click="setTop(scope.row)"
+            >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button>
+            <el-button
+              title="设置"
+              type="warning"
+              size="medium"
+              class="iconfont iconicon-test1"
+              @click="openAuthInfo(scope.row)"
+            >设置</el-button>
+          </template>
+        </el-table-column>
       </el-table>
 
       <el-pagination
@@ -107,15 +124,13 @@ export default {
       isShow: false,
       isClear: false,
       dataList: [],
-      examList: [],
       search: {
         page: 1,
         limit: 10,
-        name: "",
-        phone: "",
         user_phone: "",
-        examination_category: ""
-      }
+        status: "",
+        top: ""
+      },
     };
   },
   watch: {},
@@ -145,21 +160,33 @@ export default {
     //获取数据列表
     getDataList() {
       this.loading = true;
-      this.$api.getEducationList(this.search).then(res => {
+      this.$api.getRecruitmentsList(this.search).then(res => {
         this.dataList = res.data || [];
         this.loading = false;
       });
     },
-    //获取企业类别
-    getExamCategory() {
-      this.$api.getExamCategory().then(res => {
-        this.examList = res.data.info || [];
-      });
+    //置顶操作
+    setTop(data) {
+      
+      let top = 1;
+      if (data.top=='1') {
+        top = 0;
+      }
+      this.$api
+        .setTop({
+          type: "recruitments",
+          id: data.id,
+          top: top
+        })
+        .then(res => {
+          this.$message[res.code ? "error" : "success"](res.data.message);
+          if (res.code) return;
+          this.getDataList();
+        });
     }
   },
   created() {
     this.getDataList();
-    this.getExamCategory();
   }
 };
 </script>

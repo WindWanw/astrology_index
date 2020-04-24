@@ -66,7 +66,6 @@
 </template>
 <script>
 export default {
-  components: { Editor },
   data() {
     return {
       loading: false,

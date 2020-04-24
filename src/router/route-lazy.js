@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 11:38:46
+ * @LastEditTime: 2020-04-24 14:23:30
  */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
@@ -34,6 +34,16 @@ const serviceManage = () =>
 //企业认证
 const education = () =>
 	import( /* webpackChunkName: "education" */ '../views/serviceManage/education.vue')
+/**************************发布管理**************************/
+//发布管理
+const postManage = () =>
+	import( /* webpackChunkName: "postManage" */ '../views/postManage')
+//人才招聘
+const recruitments = () =>
+	import( /* webpackChunkName: "recruitments" */ '../views/postManage/recruitments.vue')
+//人才求职
+const jobs = () =>
+	import( /* webpackChunkName: "jobs" */ '../views/postManage/jobs.vue')
 
 
 export default {
@@ -41,11 +51,15 @@ export default {
 	notFound,
 	layout,
 	home,
-	
+
 	authManage,
 	enterpriseAuth,
 	userAuth,
 
 	serviceManage,
 	education,
+
+	postManage,
+	recruitments,
+	jobs,
 }
