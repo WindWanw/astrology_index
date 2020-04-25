@@ -58,9 +58,21 @@ export default {
     getJobsList(params) {
         return fetchGet('post/post/jobs/list', params);
     },
-    //后天权限角色列表
+    //后台权限角色列表
     getRoleList(params) {
         return fetchGet('authority/get/role/list', params);
+    },
+    //添加角色
+    addRole(params) {
+        return fetchPost('authority/add/role', params);
+    },
+    //修改角色
+    editRole(params) {
+        return fetchPost('authority/edit.role', params);
+    },
+    //启用/禁用角色
+    setRoleStatus(params) {
+        return fetchGet('authority/set/role/status', params);
     },
 
 }

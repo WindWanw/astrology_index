@@ -38,7 +38,12 @@
         </el-table-column>
         <el-table-column prop="status" label="状态" align="center">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.status | getColor">{{scope.row.status=='0' ? '未启用' : '启用'}}</el-tag>
+            <el-tag
+              style="cursor:pointer;"
+              :type="scope.row.status | getColor"
+              :title="scope.row.status=='0' ? '点击启用' : '点击禁用'"
+              @click="setRoleStatus(scope.row)"
+            >{{scope.row.status=='0' ? '未启用' : '启用'}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间" align="center"></el-table-column>
@@ -78,8 +83,17 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer btn">
-          <el-button class="iconfont iconqueding3" size="mini" type="success">确定修改</el-button>
-          <el-button class="iconfont iconquxiao" size="mini" @click="openAddEditRoleDialog = false">取 消</el-button>
+          <el-button
+            class="iconfont iconqueding3"
+            size="mini"
+            type="success"
+            @click="addRole()"
+          >确定修改</el-button>
+          <el-button
+            class="iconfont iconquxiao"
+            size="mini"
+            @click="openAddEditRoleDialog = false"
+          >取 消</el-button>
         </span>
       </el-dialog>
     </div>
@@ -142,6 +156,24 @@ export default {
       } else {
         this.form = this.$func.setAssignData(this.form, data);
       }
+    },
+    //添加角色
+    addRole() {
+      this.$api.addRole(this.form).then(res => {
+        this.$message[res.code ? "error" : "success"](res.data.message);
+        if (res.code) return;
+        this.getDataList();
+        this.openAddEditRoleDialog = false;
+      });
+    },
+    //启用
+    setRoleStatus(data) {
+      let status = data.status == "0" ? "1" : "0";
+      this.$api.setRoleStatus({ id: data.id, status: status }).then(res => {
+        this.$message[res.code ? "error" : "success"](res.data.message);
+        if (res.code) return;
+        this.getDataList();
+      });
     }
   },
   created() {
