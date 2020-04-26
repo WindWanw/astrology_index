@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 17:04:48
+ * @LastEditTime: 2020-04-26 13:38:21
  */
 import {
     fetchPost,
@@ -68,11 +68,23 @@ export default {
     },
     //修改角色
     editRole(params) {
-        return fetchPost('authority/edit.role', params);
+        return fetchPost('authority/edit/role', params);
     },
     //启用/禁用角色
     setRoleStatus(params) {
         return fetchGet('authority/set/role/status', params);
+    },
+    //获取菜单列表
+    getMenuList(params) {
+        return fetchGet('authority/get/menu/list', params);
+    },
+    //获取菜单id
+    getMenuId(params) {
+        return fetchGet('authority/get/menu/id', params);
+    },
+    //添加菜单信息
+    addMenuInfo(params) {
+        return fetchPost('authority/add/menu/info', params);
     },
 
 }

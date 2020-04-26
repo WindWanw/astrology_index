@@ -1,101 +1,102 @@
 <template>
   <div class="user-list">
     <div class="table_title">
-      <div>
-        <el-button
-          v-if="isShow"
-          type="primary"
-          size="mini"
-          class="el-icon-d-arrow-left"
-          @click="reset()"
-        >返回</el-button>
-      </div>
+      <div></div>
       <div class="search_wrap">
-        <el-input
-          class="search_warp_default"
-          clearable
-          v-model="search.name"
-          placeholder="请输入姓名"
-          size="mini"
-          @keyup.enter.native="findData"
-        ></el-input>
-        <el-input
-          class="search_warp_default"
-          clearable
-          v-model="search.phone"
-          placeholder="请输入联系电话"
-          size="mini"
-          @keyup.enter.native="findData"
-        ></el-input>
-        <el-input
-          class="search_warp_default"
-          clearable
-          v-model="search.user_phone"
-          placeholder="请输入会员账号"
-          size="mini"
-          @keyup.enter.native="findData"
-        ></el-input>
-        <el-select
-          class="search_warp_default"
-          v-model="search.examination_category"
-          size="mini"
-          clearable
-          placeholder="请选择报考类别"
-          @keyup.enter.native="findData"
-        >
-          <el-option
-            v-for="item in examList"
-            :key="item.value"
-            :label="item.key"
-            :value="item.value"
-          ></el-option>
-        </el-select>
         <el-button
           type="success"
-          class="iconfont iconsearch"
+          class="iconfont icontianjia"
           size="mini"
-          @click="findData"
           style="margin-left:5px;"
-        >搜索</el-button>
+        >添加</el-button>
       </div>
     </div>
-    <div class="content">
-      <el-table
-        :data="dataList.data"
-        stripe
-        border
-        style="width:100%"
-        v-loading="loading"
-        class="user-table"
-      >
-        <el-table-column prop="id" label="序号" align="center"></el-table-column>
-        <el-table-column prop="name" label="姓名" align="center"></el-table-column>
-        <el-table-column prop="sex" label="性别" align="center">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.sex | getColor">{{scope.row.sex | getSexStatus}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="examination_category" label="报考类别" align="center"></el-table-column>
-        <el-table-column prop="school" label="报考医院学校" align="center"></el-table-column>
-        <el-table-column prop="professional" label="报考专业" align="center"></el-table-column>
-        <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
-        <el-table-column prop="rederees_phone" label="推荐人电话" align="center"></el-table-column>
-        <el-table-column prop="userPhone" label="会员账号" align="center">
-          <template slot-scope="scope">{{scope.row.user.phone}}</template>
-        </el-table-column>
-        <el-table-column prop="created_at" label="创建时间" align="center"></el-table-column>
-      </el-table>
+    <div class="content admin-menu">
+      <div class="menu menu-list">
+        <el-tree :data="menuList" :props="defaultProps" accordion @node-click="handleNodeClick"></el-tree>
+      </div>
+      <div class="menu menu-form">
+        <el-form
+          ref="form"
+          :rules="rules"
+          :model="form"
+          label-position="left"
+          label-width="120px"
+          size="mini"
+        >
+          <el-form-item label="父级菜单">
+            <el-select v-model="form.pid" placeholder="请选择目录" prop="pid">
+              <el-option
+                v-for="(item,index) in menuIdList"
+                :key="index"
+                :label="item.title"
+                :value="item.id"
+              >
+                <!-- <span style="float: left">{{ item.label }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="菜单名" prop="title">
+            <el-input v-model="form.title" placeholder="请填写菜单的中文名称"></el-input>
+          </el-form-item>
+          <el-form-item label="菜单代码" prop="code">
+            <el-input v-model="form.code" placeholder="请填写菜单的英文名称，与页面渲染菜单名相同，必须为英文"></el-input>
+          </el-form-item>
+          <el-form-item label="菜单排序" prop="sort">
+            <el-input v-model="form.sort" type="number" placeholder="请输入菜单序号，菜单将以从小到大排序"></el-input>
+          </el-form-item>
+          <el-form-item label="菜单状态" prop="status">
+            <el-switch
+              style="display: block"
+              v-model="form.status"
+              active-value="1"
+              inactive-value="0"
+              active-color="#00FF00"
+              inactive-color="#FF0000"
+              active-text="启用"
+              inactive-text="禁止"
+            ></el-switch>
+          </el-form-item>
+          <el-form-item label="菜单操作" prop="isAction">
+            <el-radio v-model="form.isAction" label="0">不存在</el-radio>
+            <el-radio v-model="form.isAction" label="1">存在</el-radio>
+          </el-form-item>
+          <el-form-item v-if="form.isAction=='1'">
+            <div class="action">
+              <span v-for="(item,index) in form.action" :key="index">
+                <el-col :span="1">
+                  <i class="iconfont icontianjia2" @click="addAction(index)"></i>
+                </el-col>
+                <el-col :span="11">
+                  <el-input v-model="item.title" placeholder="请输入操作名称"></el-input>
+                </el-col>
+                <el-col :span="11">
+                  <el-input v-model="item.router" placeholder="请输入操作路由地址"></el-input>
+                </el-col>
+                <el-col :span="1">
+                  <i class="iconfont iconshanchu" @click="delAction(index)"></i>
+                </el-col>
+              </span>
+            </div>
+          </el-form-item>
 
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="search.page"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="search.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="dataList.total"
-      ></el-pagination>
+          <el-form-item size="large">
+            <el-button
+              size="mini"
+              class="iconfont iconiconfontzhizuobiaozhunbduan20"
+              type="primary"
+              @click="onSubmit"
+            >确定</el-button>
+            <el-button
+              size="mini"
+              class="iconfont iconcancel1"
+              type="danger"
+              @click="getDefaultForm"
+            >取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -104,62 +105,101 @@ export default {
   data() {
     return {
       loading: false,
-      isShow: false,
-      isClear: false,
-      dataList: [],
-      examList: [],
-      search: {
-        page: 1,
-        limit: 10,
-        name: "",
-        phone: "",
-        user_phone: "",
-        examination_category: ""
+      menuList: [],
+      menuIdList: [],
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
+      rules: {
+        title: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
+        code: [{ required: true, message: "请输入菜单代码", trigger: "blur" }]
+      },
+      form: {
+        pid: 0,
+        title: "",
+        code: "",
+        sort: "",
+        status: 0,
+        isAction: "0",
+        action: [
+          {
+            title: "",
+            router: ""
+          }
+        ]
       }
     };
   },
   watch: {},
   methods: {
-    //分页
-    handleSizeChange(val) {
-      this.limit = val;
-      this.getDataList();
-    },
-    //分条
-    handleCurrentChange(val) {
-      this.page = val;
-      this.getDataList();
-    },
-    //返回
-    reset() {
-      this.$func.setDefaultData(this.search);
-      this.getDataList();
-      this.isShow = false;
-    },
-    //查询
-    findData() {
-      this.page = 1;
-      this.getDataList();
-      this.isShow = true;
+    handleNodeClick(data) {
+      console.log(data);
     },
     //获取数据列表
     getDataList() {
       this.loading = true;
-      this.$api.getEducationList(this.search).then(res => {
-        this.dataList = res.data || [];
+      this.$api.getMenuList().then(res => {
+        this.menuList = res.data || [];
         this.loading = false;
       });
     },
-    //获取企业类别
-    getExamCategory() {
-      this.$api.getExamCategory().then(res => {
-        this.examList = res.data.info || [];
+    //获取菜单id
+    getMenuId() {
+      this.$api.getMenuId().then(res => {
+        this.menuIdList = res.data || [];
       });
+    },
+    //添加操作
+    addAction(index) {
+      console.log(index);
+      this.form.action.push({
+        title: "",
+        router: ""
+      });
+    },
+    //删除操作
+    delAction(index) {
+      console.log(index);
+      let a = this.form.action;
+      if (a.length == 1 && index == 0) {
+        this.$func.setDefaultData(a[index]);
+      } else {
+        a.splice(index, 1);
+      }
+    },
+    //确定添加菜单
+    onSubmit() {
+      this.loading = true;
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.$api.addMenuInfo(this.form).then(res => {
+            this.$message[res.code ? "error" : "success"](res.message);
+            this.getDataList();
+            this.getMenuId();
+            this.getDefaultForm();
+          });
+        }
+        this.loading = false;
+      });
+    },
+    //将form表单初始化
+    getDefaultForm() {
+      this.$func.setDefaultData(this.form);
+      this.form.pid = 0;
+      this.form.status = 0;
+      this.form.isAction = "0";
+      this.form.action = [
+        {
+          title: "",
+          router: ""
+        }
+      ];
     }
   },
   created() {
     this.getDataList();
-    this.getExamCategory();
+    this.getMenuId();
   }
 };
 </script>
@@ -169,27 +209,6 @@ export default {
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
-}
-.idcard-image {
-  display: flex;
-  justify-content: flex-start;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 150px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
-}
-
-.idcard-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 250px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
 }
 .el-tag + .el-tag {
   margin-left: 10px;
@@ -216,5 +235,40 @@ export default {
 }
 .el-dialog__footer {
   text-align: left;
+}
+.admin-menu {
+  display: flex;
+  justify-content: space-between;
+}
+.menu {
+  width: 48%;
+  border: 1px solid #cfcfcf;
+  margin: 10px 5px;
+  padding: 20px;
+}
+.menu-list {
+  overflow-y: scroll;
+  height: 600px;
+}
+.menu-form {
+  height: 50%;
+}
+.icontianjia2 {
+  color: #a020f0;
+  cursor: pointer;
+  margin: 3px 5px;
+}
+.iconshanchu {
+  color: red;
+  cursor: pointer;
+  margin: 3px;
+}
+.action {
+  overflow-y: scroll;
+  height: 200px;
+}
+.action span {
+  display: flex;
+  flex-direction: row;
 }
 </style>

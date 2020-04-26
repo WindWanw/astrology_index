@@ -2,13 +2,7 @@
   <div class="user-list">
     <div class="table_title">
       <div>
-        <el-button
-          v-if="isShow"
-          type="primary"
-          size="mini"
-          class="el-icon-d-arrow-left"
-          @click="reset()"
-        >返回</el-button>
+        
       </div>
       <div class="search_wrap">
         <el-button
