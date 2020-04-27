@@ -2,18 +2,18 @@
   <div class="user-list">
     <div class="table_title">
       <div></div>
-      <div class="search_wrap">
-        <el-button
-          type="success"
-          class="iconfont icontianjia"
-          size="mini"
-          style="margin-left:5px;"
-        >添加</el-button>
-      </div>
+      <div class="search_wrap"></div>
     </div>
     <div class="content admin-menu">
       <div class="menu menu-list">
-        <el-tree :data="menuList" :props="defaultProps" accordion @node-click="handleNodeClick"></el-tree>
+        <el-tree
+          :data="menuList"
+          :props="defaultProps"
+          accordion
+          show-checkbox
+          :highlight-current="true"
+          @node-click="handleNodeClick"
+        ></el-tree>
       </div>
       <div class="menu menu-form">
         <el-form
@@ -32,8 +32,7 @@
                 :label="item.title"
                 :value="item.id"
               >
-                <!-- <span style="float: left">{{ item.label }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
+                <span style="float: left">{{ item.title }}</span>
               </el-option>
             </el-select>
           </el-form-item>
@@ -58,11 +57,11 @@
               inactive-text="禁止"
             ></el-switch>
           </el-form-item>
-          <el-form-item label="菜单操作" prop="isAction">
-            <el-radio v-model="form.isAction" label="0">不存在</el-radio>
-            <el-radio v-model="form.isAction" label="1">存在</el-radio>
+          <el-form-item label="菜单操作" prop="is_action">
+            <el-radio v-model="form.is_action" label="0">不存在</el-radio>
+            <el-radio v-model="form.is_action" label="1">存在</el-radio>
           </el-form-item>
-          <el-form-item v-if="form.isAction=='1'">
+          <el-form-item v-if="form.is_action==1">
             <div class="action">
               <span v-for="(item,index) in form.action" :key="index">
                 <el-col :span="1">
@@ -84,10 +83,11 @@
           <el-form-item size="large">
             <el-button
               size="mini"
-              class="iconfont iconiconfontzhizuobiaozhunbduan20"
-              type="primary"
-              @click="onSubmit"
-            >确定</el-button>
+              class="iconfont"
+              :class="form.id ? ' iconbianji' : ' iconiconfontzhizuobiaozhunbduan20'"
+              :type="form.id ? 'primary' : 'success'"
+              @click="onSubmit(form.id)"
+            >{{form.id ? '修改' : '提交'}}</el-button>
             <el-button
               size="mini"
               class="iconfont iconcancel1"
@@ -116,12 +116,13 @@ export default {
         code: [{ required: true, message: "请输入菜单代码", trigger: "blur" }]
       },
       form: {
+        id: "",
         pid: 0,
         title: "",
         code: "",
         sort: "",
-        status: 0,
-        isAction: "0",
+        status: "0",
+        is_action: "0",
         action: [
           {
             title: "",
@@ -134,7 +135,21 @@ export default {
   watch: {},
   methods: {
     handleNodeClick(data) {
-      console.log(data);
+      for (let i in this.form) {
+        if (
+          typeof data[i] == "object" &&
+          data[i].length == 0 &&
+          i == "action"
+        ) {
+          data[i] = [
+            {
+              title: "",
+              router: ""
+            }
+          ];
+        }
+        this.form[i] = data[i];
+      }
     },
     //获取数据列表
     getDataList() {
@@ -163,22 +178,39 @@ export default {
       console.log(index);
       let a = this.form.action;
       if (a.length == 1 && index == 0) {
-        this.$func.setDefaultData(a[index]);
+        if (a[index].id) {
+          a[index].title = "";
+          a[index].router = "";
+        } else {
+          this.$func.setDefaultData(a[index]);
+        }
       } else {
         a.splice(index, 1);
       }
     },
     //确定添加菜单
-    onSubmit() {
+    onSubmit(id) {
+      //如果存在操作，则操作的名称和代码不能为空
+      if (this.form.is_action == "1") {
+        for (let i in this.form.action) {
+          console.log(this.form.action[i]);
+          if (!this.form.action[i].title || !this.form.action[i].router) {
+            return this.$message.error("名称和api路由不能为空");
+          }
+        }
+      }
       this.loading = true;
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.$api.addMenuInfo(this.form).then(res => {
-            this.$message[res.code ? "error" : "success"](res.message);
-            this.getDataList();
-            this.getMenuId();
-            this.getDefaultForm();
-          });
+          this.$api[id ? "editMenuInfo" : "addMenuInfo"](this.form).then(
+            res => {
+              this.$message[res.code ? "error" : "success"](res.message);
+              if (res.code) return;
+              this.getDataList();
+              this.getMenuId();
+              this.getDefaultForm();
+            }
+          );
         }
         this.loading = false;
       });
@@ -187,8 +219,8 @@ export default {
     getDefaultForm() {
       this.$func.setDefaultData(this.form);
       this.form.pid = 0;
-      this.form.status = 0;
-      this.form.isAction = "0";
+      this.form.status = "0";
+      this.form.is_action = "0";
       this.form.action = [
         {
           title: "",

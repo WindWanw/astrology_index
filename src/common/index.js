@@ -1,4 +1,12 @@
-const add = function(...addend) {
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: ww
+ * @date: 
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2020-04-27 10:54:19
+ */
+const add = function (...addend) {
     let val = 0;
     addend.forEach(item => {
         val += item;
@@ -11,9 +19,9 @@ const add = function(...addend) {
  * 将数据重置为空
  * @param {*} data 
  */
-const setDefaultData = function(data) {
+const setDefaultData = function (data) {
     for (let i in data) {
-        let type = typeof(data[i]);
+        let type = typeof (data[i]);
         switch (type) {
             case 'string':
                 data[i] = "";
@@ -52,7 +60,9 @@ const setAssignData = (form, data) => {
 
     for (let i in form) {
 
-        if (typeof(data[i]) == "number") { //如果data中类型为数字的，则转换成字符串
+        let t = typeof (data[i]);
+
+        if (t == "number") { //如果data中类型为数字的，则转换成字符串
             form[i] = String(data[i]);
         } else {
             form[i] = data[i];
@@ -62,8 +72,37 @@ const setAssignData = (form, data) => {
     return form;
 }
 
+/**
+ * 转换数据
+ * @param {被转换} data 
+ * @param {转换的类型} type 
+ */
+const setDataChange = (data, type = 'array') => {
+
+    let t = typeof (data);
+    let list = [];
+
+    if (t == 'object') {
+        switch (type) {
+            case 'array':
+                for (let i in data) {
+                    list.push(data[i]);
+                }
+                return list;
+                break;
+
+            default:
+                return data;
+                break;
+        }
+    } else if (t == 'array') {
+        return data;
+    }
+}
+
 export default {
     add,
     setDefaultData,
-    setAssignData
+    setAssignData,
+    setDataChange
 }

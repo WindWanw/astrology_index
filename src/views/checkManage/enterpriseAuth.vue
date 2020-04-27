@@ -237,12 +237,12 @@ export default {
   methods: {
     //分页
     handleSizeChange(val) {
-      this.limit = val;
+      this.search.limit = val;
       this.getDataList();
     },
     //分条
     handleCurrentChange(val) {
-      this.page = val;
+      this.search.page = val;
       this.getDataList();
     },
     //返回
@@ -253,7 +253,7 @@ export default {
     },
     //查询
     findData() {
-      this.page = 1;
+      this.search.page = 1;
       this.getDataList();
       this.isShow = true;
     },

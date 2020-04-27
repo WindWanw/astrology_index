@@ -1,9 +1,7 @@
 <template>
   <div class="user-list">
     <div class="table_title">
-      <div>
-        
-      </div>
+      <div></div>
       <div class="search_wrap">
         <el-button
           title="添加角色"
@@ -64,7 +62,13 @@
         @close="closeDialog()"
       >
         <div>
-          <el-form label-position="left" label-width="120px" :model="form">
+          <el-form
+            ref="form"
+            :rules="rules"
+            label-position="left"
+            label-width="120px"
+            :model="form"
+          >
             <el-form-item label="角色名称" prop="role_name">
               <el-input v-model="form.role_name" size="mini" placeholder="请填写角色名称"></el-input>
             </el-form-item>
@@ -72,20 +76,42 @@
               <el-input v-model="form.role_code" size="mini" placeholder="请填写角色代码"></el-input>
             </el-form-item>
             <el-form-item label="角色描述" prop="describe">
-              <el-input type="textarea" v-model="form.describe"></el-input>
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 3, maxRows: 5}"
+                placeholder="请填写角色描述"
+                v-model="form.describe"
+                maxlength="200"
+                show-word-limit
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="角色权限" prop="menu_id">
+              <el-tree
+                :data="menuList"
+                :props="defaultProps"
+                accordion
+                show-checkbox
+                :highlight-current="true"
+                node-key="id"
+                ref="tree"
+                @check="getCheckedKeys()"
+                :default-checked-keys="[]"
+              ></el-tree>
             </el-form-item>
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer btn">
           <el-button
-            class="iconfont iconqueding3"
+            class="iconfont"
+            :class="form.id ? 'iconbianji' : 'iconiconfontzhizuobiaozhunbduan20'"
             size="mini"
-            type="success"
+            :type="form.id ? 'primary' : 'success'"
             @click="addRole()"
-          >确定修改</el-button>
+          >{{form.id ? '修改' : '提交'}}</el-button>
           <el-button
-            class="iconfont iconquxiao"
+            class="iconfont iconcancel1"
             size="mini"
+            type="warning"
             @click="openAddEditRoleDialog = false"
           >取 消</el-button>
         </span>
@@ -108,21 +134,40 @@ export default {
         id: "",
         role_name: "",
         role_code: "",
-        describe: ""
+        describe: "",
+        menu_id: []
+      },
+      menuList: [],
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
+      rules: {
+        role_name: [
+          { required: true, message: "请输入角色名称", trigger: "blur" }
+        ],
+        role_code: [
+          { required: true, message: "请输入角色代码", trigger: "blur" }
+        ],
+        menu_id: [{ required: true, message: "请选择权限", trigger: "blur" }]
       },
       openAddEditRoleDialog: false
     };
   },
   watch: {},
   methods: {
+    getCheckedKeys() {
+      this.form.menu_id = this.$refs.tree.getCheckedKeys();
+    },
+
     //分页
     handleSizeChange(val) {
-      this.limit = val;
+      this.search.limit = val;
       this.getDataList();
     },
     //分条
     handleCurrentChange(val) {
-      this.page = val;
+      this.search.page = val;
       this.getDataList();
     },
     beforeCloseDialog(done) {
@@ -142,6 +187,12 @@ export default {
         this.loading = false;
       });
     },
+    //获取权限
+    getMenuList() {
+      this.$api.getMenuList().then(res => {
+        this.menuList = res.data || [];
+      });
+    },
     //打开dialog操作
     openAddEditRole(type, data) {
       this.openAddEditRoleDialog = true;
@@ -150,11 +201,15 @@ export default {
       } else {
         this.form = this.$func.setAssignData(this.form, data);
       }
+      this.getMenuList();
     },
     //添加角色
     addRole() {
+      if (!this.form.menu_id.length) {
+        return this.$message.warning("必须选择权限");
+      }
       this.$api.addRole(this.form).then(res => {
-        this.$message[res.code ? "error" : "success"](res.data.message);
+        this.$message[res.code ? "error" : "success"](res.message);
         if (res.code) return;
         this.getDataList();
         this.openAddEditRoleDialog = false;

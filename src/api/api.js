@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-26 13:38:21
+ * @LastEditTime: 2020-04-27 13:59:21
  */
 import {
     fetchPost,
@@ -85,6 +85,10 @@ export default {
     //添加菜单信息
     addMenuInfo(params) {
         return fetchPost('authority/add/menu/info', params);
+    },
+    //修改菜单信息
+    editMenuInfo(params) {
+        return fetchPost('authority/edit/menu/info', params);
     },
 
 }
