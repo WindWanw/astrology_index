@@ -14,8 +14,8 @@
         <el-input
           class="search_warp_default"
           clearable
-          v-model="search.name"
-          placeholder="请输入姓名"
+          v-model="search.username"
+          placeholder="请输入账号"
           size="mini"
           @keyup.enter.native="findData"
         ></el-input>
@@ -27,29 +27,6 @@
           size="mini"
           @keyup.enter.native="findData"
         ></el-input>
-        <el-input
-          class="search_warp_default"
-          clearable
-          v-model="search.user_phone"
-          placeholder="请输入会员账号"
-          size="mini"
-          @keyup.enter.native="findData"
-        ></el-input>
-        <el-select
-          class="search_warp_default"
-          v-model="search.examination_category"
-          size="mini"
-          clearable
-          placeholder="请选择报考类别"
-          @keyup.enter.native="findData"
-        >
-          <el-option
-            v-for="item in examList"
-            :key="item.value"
-            :label="item.key"
-            :value="item.value"
-          ></el-option>
-        </el-select>
         <el-button
           type="success"
           class="iconfont iconsearch"
@@ -57,6 +34,13 @@
           @click="findData"
           style="margin-left:5px;"
         >搜索</el-button>
+        <el-button
+          type="primary"
+          class="iconfont icontianjia"
+          size="small"
+          style="margin-left:5px;"
+          @click="openAddEdit('add')"
+        >添加</el-button>
       </div>
     </div>
     <div class="content">
@@ -68,22 +52,39 @@
         v-loading="loading"
         class="user-table"
       >
-        <el-table-column prop="id" label="序号" align="center"></el-table-column>
-        <el-table-column prop="name" label="姓名" align="center"></el-table-column>
-        <el-table-column prop="sex" label="性别" align="center">
+        <el-table-column prop="id" label="ID" align="center"></el-table-column>
+        <el-table-column prop="username" label="账号" align="center"></el-table-column>
+        <el-table-column prop="role" label="角色" align="center">
+          <template slot-scope="scope">{{scope.row.role ? scope.row.role.roles.role_name : '未知'}}</template>
+        </el-table-column>
+        <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
+        <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
+        <el-table-column prop="reg_ip" label="注册ip" align="center"></el-table-column>
+        <el-table-column prop="block_status" label="是否锁定" align="center">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.sex | getColor">{{scope.row.sex | getSexStatus}}</el-tag>
+            <el-tag
+              class="el-tag"
+              effect="dark"
+              size="small"
+              :title="scope.row.block_status ? '点击接触用户锁定' : '点击锁定用户'"
+              :type="scope.row.block_status ? 'danger' : 'success'"
+              @click="blockUser(scope.row)"
+            >{{scope.row.block_status ? '锁定' : '未锁定'}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="examination_category" label="报考类别" align="center"></el-table-column>
-        <el-table-column prop="school" label="报考医院学校" align="center"></el-table-column>
-        <el-table-column prop="professional" label="报考专业" align="center"></el-table-column>
-        <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
-        <el-table-column prop="rederees_phone" label="推荐人电话" align="center"></el-table-column>
-        <el-table-column prop="userPhone" label="会员账号" align="center">
-          <template slot-scope="scope">{{scope.row.user.phone}}</template>
-        </el-table-column>
+        <el-table-column prop="reg_from" label="注册来源" align="center"></el-table-column>
+        <el-table-column prop="logintime" label="登录次数" align="center"></el-table-column>
         <el-table-column prop="created_at" label="创建时间" align="center"></el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              class="iconfont iconbianji"
+              size="mini"
+              type="warning"
+              @click="openAddEdit('edit',scope.row)"
+            >修 改</el-button>
+          </template>
+        </el-table-column>
       </el-table>
 
       <el-pagination
@@ -96,6 +97,80 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="dataList.total"
       ></el-pagination>
+
+      <el-dialog
+        :title="form.id ? '修改用户信息' : '添加用户信息'"
+        :visible.sync="openAddEditDialog"
+        v-loading="loading"
+        top="30px"
+        width="60%"
+        :before-close="beforeCloseDialog"
+        @close="closeDialog()"
+      >
+        <div>
+          <el-form
+            ref="form"
+            :rules="rules"
+            label-position="left"
+            label-width="120px"
+            :model="form"
+          >
+            <el-form-item label="账号" prop="username">
+              <el-input v-model="form.username" size="mini" placeholder="请填写账号"></el-input>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="phone">
+              <el-input v-model="form.phone" size="mini" placeholder="请填写电话号码"></el-input>
+            </el-form-item>
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" size="mini" placeholder="请填写邮箱">
+                <el-select v-model="form.suffix" slot="append" placeholder="请选择邮箱后缀">
+                  <el-option
+                    v-for="(item,index) in suffixList"
+                    :key="index"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input
+                v-model="form.password"
+                size="mini"
+                show-password
+                :readonly="form.id ? true : false"
+                placeholder="请填写电话号码"
+              ></el-input>
+            </el-form-item>
+
+            <el-form-item label="用户角色" prop="role">
+              <el-select v-model="form.role" clearable placeholder="请选择用户角色">
+                <el-option
+                  v-for="item in roleList"
+                  :key="item.id"
+                  :label="item.role_name"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer btn">
+          <el-button
+            class="iconfont"
+            :class="form.id ? 'iconbianji' : 'iconiconfontzhizuobiaozhunbduan20'"
+            size="mini"
+            :type="form.id ? 'primary' : 'success'"
+            @click="addEditUser()"
+          >{{form.id ? '修改' : '提交'}}</el-button>
+          <el-button
+            class="iconfont iconcancel1"
+            size="mini"
+            type="warning"
+            @click="openAddEditDialog = false"
+          >取 消</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -105,17 +180,31 @@ export default {
     return {
       loading: false,
       isShow: false,
-      isClear: false,
       dataList: [],
-      examList: [],
+      suffixList: [],
+      roleList: [],
       search: {
         page: 1,
         limit: 10,
-        name: "",
+        username: "",
+        phone: ""
+      },
+      form: {
+        id: "",
+        username: "",
         phone: "",
-        user_phone: "",
-        examination_category: ""
-      }
+        email: "",
+        suffix: "",
+        password: "",
+        role: ""
+      },
+      rules: {
+        username: [{ required: true, message: "请填写账号", trigger: "blur" }],
+        phone: [{ required: true, message: "请填写电话号码", trigger: "blur" }],
+        password: [{ required: true, message: "请填写密码", trigger: "blur" }],
+        role: [{ required: true, message: "请选择用户角色", trigger: "change" }]
+      },
+      openAddEditDialog: false
     };
   },
   watch: {},
@@ -142,24 +231,79 @@ export default {
       this.getDataList();
       this.isShow = true;
     },
+    beforeCloseDialog(done) {
+      this.$confirm("确定要关闭吗？").then(_ => {
+        done();
+      });
+    },
+    //关闭dialog
+    closeDialog() {
+      this.$func.setDefaultData(this.form);
+    },
     //获取数据列表
     getDataList() {
       this.loading = true;
-      this.$api.getEducationList(this.search).then(res => {
+      this.$api.getAdminUserList(this.search).then(res => {
         this.dataList = res.data || [];
         this.loading = false;
       });
     },
-    //获取企业类别
-    getExamCategory() {
-      this.$api.getExamCategory().then(res => {
-        this.examList = res.data.info || [];
+    //点击锁定/解锁用户
+    blockUser(data) {
+      let block = data.block_status ? 0 : 1;
+      this.$api.blockUser({ id: data.id, block_status: block }).then(res => {
+        this.$message[res.code ? "error" : "success"](res.message);
+        if (res.code) return;
+        this.getDataList();
+      });
+    },
+    //点击打开增加/修改dialog
+    openAddEdit(type, data) {
+      this.openAddEditDialog = true;
+      if (type == "add") {
+        this.$func.setDefaultData(this.form);
+      } else {
+        this.$func.setAssignData(this.form, data);
+
+        if (data.role) {
+          this.form.role = data.role.role_id;
+        }
+      }
+      this.getEmailSuffix();
+      this.getRoleSelect();
+    },
+    //获取邮箱常用后缀
+    getEmailSuffix() {
+      this.$api.getEmailSuffix().then(res => {
+        this.suffixList = res.data || [];
+      });
+    },
+    //获取角色相关信息
+    getRoleSelect() {
+      this.$api.getRoleSelect().then(res => {
+        this.roleList = res.data || [];
+      });
+    },
+    //增加修改用户信息
+    addEditUser() {
+      this.loading = true;
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.$api[this.form.id ? "editUserInfo" : "addUserInfo"](
+            this.form
+          ).then(res => {
+            this.$message[res.code ? "error" : "success"](res.message);
+            if (res.code) return;
+            this.openAddEditDialog = false;
+            this.getDataList();
+          });
+        }
+        this.loading = false;
       });
     }
   },
   created() {
     this.getDataList();
-    this.getExamCategory();
   }
 };
 </script>

@@ -290,7 +290,7 @@ export default {
     //审核
     auditEnterpriseCertification() {
       this.$api.auditEnterpriseCertification(this.form).then(res => {
-        this.$message[res.code ? 'error' : 'success'](res.data.message)
+        this.$message[res.code ? 'error' : 'success'](res.message)
         this.authInfoDialog=false;
         this.getDataList();
       });

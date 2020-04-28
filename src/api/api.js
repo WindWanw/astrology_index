@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-27 13:59:21
+ * @LastEditTime: 2020-04-28 11:30:02
  */
 import {
     fetchPost,
@@ -27,6 +27,9 @@ export default {
     //学历类别
     getExamCategory(params) {
         return fetchGet('common/get/exam/category', params);
+    },
+    getEmailSuffix(params) {
+        return fetchGet('common/get/email/suffix', params);
     },
 
 
@@ -89,6 +92,26 @@ export default {
     //修改菜单信息
     editMenuInfo(params) {
         return fetchPost('authority/edit/menu/info', params);
+    },
+    //获取后台用户信息
+    getAdminUserList(params) {
+        return fetchGet('authority/get/admin/user/list', params);
+    },
+    //注册/添加后台用户信息
+    addUserInfo(params) {
+        return fetchPost('authority/add/user/info', params);
+    },
+    //修改用户信息
+    editUserInfo(params) {
+        return fetchPost('authority/edit/user/info', params);
+    },
+    //锁定/解锁用户
+    blockUser(params) {
+        return fetchGet('authority/block/user', params);
+    },
+    //获取角色相关信息
+    getRoleSelect(params) {
+        return fetchGet('authority/get/role/select', params);
     },
 
 }

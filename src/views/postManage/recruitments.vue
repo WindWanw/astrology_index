@@ -179,7 +179,7 @@ export default {
           top: top
         })
         .then(res => {
-          this.$message[res.code ? "error" : "success"](res.data.message);
+          this.$message[res.code ? "error" : "success"](res.message);
           if (res.code) return;
           this.getDataList();
         });

@@ -8,7 +8,7 @@
           type="success"
           class="iconfont icontianjia"
           size="mini"
-          @click="openAddEditRole('add')"
+          @click="openAddEdit('add')"
         >添加</el-button>
       </div>
     </div>
@@ -39,6 +39,16 @@
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="创建时间" align="center"></el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              class="iconfont iconbianji"
+              size="mini"
+              type="warning"
+              @click="openAddEdit('edit',scope.row)"
+            >修 改</el-button>
+          </template>
+        </el-table-column>
       </el-table>
 
       <el-pagination
@@ -54,7 +64,7 @@
 
       <el-dialog
         :title="form.id ? '修改角色信息' : '添加角色信息'"
-        :visible.sync="openAddEditRoleDialog"
+        :visible.sync="openAddEditDialog"
         v-loading="loading"
         top="30px"
         width="60%"
@@ -95,7 +105,8 @@
                 node-key="id"
                 ref="tree"
                 @check="getCheckedKeys()"
-                :default-checked-keys="[]"
+                :default-checked-keys="form.menu_id"
+                :default-expand-all="true"
               ></el-tree>
             </el-form-item>
           </el-form>
@@ -112,7 +123,7 @@
             class="iconfont iconcancel1"
             size="mini"
             type="warning"
-            @click="openAddEditRoleDialog = false"
+            @click="closeDialog"
           >取 消</el-button>
         </span>
       </el-dialog>
@@ -151,7 +162,7 @@ export default {
         ],
         menu_id: [{ required: true, message: "请选择权限", trigger: "blur" }]
       },
-      openAddEditRoleDialog: false
+      openAddEditDialog: false
     };
   },
   watch: {},
@@ -177,6 +188,7 @@ export default {
     },
     //关闭dialog
     closeDialog() {
+      this.openAddEditDialog=false;
       this.$func.setDefaultData(this.form);
     },
     //获取数据列表
@@ -194,32 +206,38 @@ export default {
       });
     },
     //打开dialog操作
-    openAddEditRole(type, data) {
-      this.openAddEditRoleDialog = true;
+    openAddEdit(type, data) {
+
+      this.openAddEditDialog = true;
       if (type == "add") {
         this.$func.setDefaultData(this.form);
       } else {
-        this.form = this.$func.setAssignData(this.form, data);
+        this.$func.setAssignData(this.form, data);
       }
       this.getMenuList();
     },
     //添加角色
     addRole() {
+      // console.log(this.form);return ;
       if (!this.form.menu_id.length) {
         return this.$message.warning("必须选择权限");
       }
-      this.$api.addRole(this.form).then(res => {
-        this.$message[res.code ? "error" : "success"](res.message);
-        if (res.code) return;
-        this.getDataList();
-        this.openAddEditRoleDialog = false;
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.$api.addRole(this.form).then(res => {
+            this.$message[res.code ? "error" : "success"](res.message);
+            if (res.code) return;
+            this.getDataList();
+            this.openAddEditDialog = false;
+          });
+        }
       });
     },
     //启用
     setRoleStatus(data) {
       let status = data.status == "0" ? "1" : "0";
       this.$api.setRoleStatus({ id: data.id, status: status }).then(res => {
-        this.$message[res.code ? "error" : "success"](res.data.message);
+        this.$message[res.code ? "error" : "success"](res.message);
         if (res.code) return;
         this.getDataList();
       });

@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-27 10:54:19
+ * @LastEditTime: 2020-04-28 17:30:48
  */
 const add = function (...addend) {
     let val = 0;

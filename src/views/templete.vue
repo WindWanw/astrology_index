@@ -437,7 +437,7 @@ export default {
       this.loading = true;
       this.form.status = status;
       this.$api.editArticleInfo(this.form).then(res => {
-        this.$message[res.code ? "warning" : "success"](res.data.message);
+        this.$message[res.code ? "warning" : "success"](res.message);
         this.loading = false;
         if (res.code) return;
         this.getDataList();
@@ -448,7 +448,7 @@ export default {
     destroy(id) {
       this.$confirm("确定要删除？").then(_ => {
         this.$api.deleteArticle({ id: id }).then(res => {
-          this.$message[res.code ? "warning" : "success"](res.data.message);
+          this.$message[res.code ? "warning" : "success"](res.message);
           this.getDataList();
         });
       });

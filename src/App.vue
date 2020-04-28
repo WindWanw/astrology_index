@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 15:44:30
+ * @LastEditTime: 2020-04-28 10:35:26
  -->
 <template>
   <div id="app">
@@ -101,5 +101,8 @@ html,
 }
 .iconshanchu1:before {
      margin: 0 5px;
+}
+.el-tag{
+  cursor: pointer;
 }
 </style>
