@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-28 11:30:02
+ * @LastEditTime: 2020-04-29 17:27:32
  */
 import {
     fetchPost,
@@ -113,5 +113,8 @@ export default {
     getRoleSelect(params) {
         return fetchGet('authority/get/role/select', params);
     },
-
+    //根据menu_id获取操作
+    getMenuAction(params) {
+        return fetchGet('authority/get/menu/action', params);
+    },
 }

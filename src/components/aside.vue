@@ -12,7 +12,7 @@
     <!-- 一级菜单 -->
     <template v-for="item in asideList">
       <el-submenu
-        v-if="item.children && item.children.length"
+        v-if="item.children && item.children.length && getAuthPath(item.path)"
         :index="item.path"
         :key="item.path"
       >
@@ -24,7 +24,7 @@
         <!-- 二级菜单 -->
         <template v-for="itemChild in item.children">
           <el-submenu
-            v-if="itemChild.children && itemChild.children.length"
+            v-if="itemChild.children && itemChild.children.length&& getAuthPath(itemChild.path)"
             :index="itemChild.path"
             :key="itemChild.path"
           >
@@ -34,41 +34,31 @@
             </template>
 
             <!-- 三级菜单 -->
-            <el-menu-item
-              v-for="itemChild_Child in itemChild.children"
-              :index="itemChild_Child.path"
-              :key="itemChild_Child.path"
-            >
-              <i :class="itemChild_Child.meta.iconfont"></i>
-              <span slot="title">{{itemChild_Child.meta.name}}</span>
-            </el-menu-item>
+            <template v-for="itemChild_Child in itemChild.children">
+              <el-menu-item
+                v-if="getAuthPath(itemChild_Child.path)"
+                :index="itemChild_Child.path"
+                :key="itemChild_Child.path"
+              >
+                <i :class="itemChild_Child.meta.iconfont"></i>
+                <span slot="title">{{itemChild_Child.meta.name}}</span>
+              </el-menu-item>
+            </template>
           </el-submenu>
 
           <el-menu-item
-            v-else
+            v-else-if="getAuthPath(itemChild.path)"
             :index="itemChild.path"
             :key="itemChild.path"
           >
             <i :class="itemChild.meta.iconfont"></i>
 
-            <span slot="title">
-              {{itemChild.meta.name}}
-              <!-- <el-badge
-                :value="getNum(itemChild.name)"
-                :max="99"
-                class="item"
-                :hidden="check.indexOf(itemChild.name) ==-1 || getNum(itemChild.name)==0"
-              >{{itemChild.meta.name}}</el-badge> -->
-            </span>
+            <span slot="title">{{itemChild.meta.name}}</span>
           </el-menu-item>
         </template>
       </el-submenu>
 
-      <el-menu-item
-        v-else
-        :index="item.path"
-        :key="item.path"
-      >
+      <el-menu-item v-else-if="getAuthPath(item.path)" :index="item.path" :key="item.path">
         <i :class="item.meta.iconfont"></i>
         <span slot="title">{{item.meta.name}}</span>
       </el-menu-item>
@@ -81,12 +71,10 @@ export default {
   props: ["collapse"],
   data() {
     return {
-      active: this.$route.path,
+      active: this.$route.path
     };
   },
-  methods: {
-    
-  },
+  methods: {},
   computed: {
     asideList() {
       return this.$store.getters.asideList;
@@ -98,6 +86,20 @@ export default {
     }
   },
   components: {},
+  methods: {
+    //检测路由
+    getAuthPath(path) {
+      let router = this.$store.getters.path;
+
+      for (let i in router) {
+        if (router[i].code == path.slice(1) && router[i].status == "1") {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  },
   created() {
     this.active = this.$route.path;
   }

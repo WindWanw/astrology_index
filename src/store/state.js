@@ -7,4 +7,6 @@ export default {
     menuType: 1, //tab类型
 
     userInfo: "", //用户信息
+
+    path:[],//授权路由
 }

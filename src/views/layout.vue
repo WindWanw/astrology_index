@@ -43,6 +43,7 @@ export default {
           localStorage.clear("token");
         } else {
           this.$store.commit("ADD_USER_INFO", res.data);
+          this.$store.commit("GET_AUTH_PATH",res.data.path)
         }
       });
     }

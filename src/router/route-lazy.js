@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-29 11:15:31
+ * @LastEditTime: 2020-04-29 15:15:56
  */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
@@ -19,6 +19,8 @@ const home = () =>
 //用户管理
 const userManage = () =>
 	import( /* webpackChunkName: "userManage" */ '../views/userManage')
+const userList = () =>
+	import( /* webpackChunkName: "userList" */ '../views/userManage/userList.vue')
 /**************************权限管理**************************/
 //权限管理
 const authorityManage = () =>
@@ -73,6 +75,7 @@ export default {
 	home,
 
 	userManage,
+	userList,
 
 	authorityManage,
 	adminUser,

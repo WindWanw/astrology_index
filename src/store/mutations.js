@@ -1,6 +1,3 @@
-/**
- * 
- */
 const ADD_TAB = (state, data) => {
     if (state.menuType == 1) {
         if (state.menuList.some(item => item.path === data.path)) return;
@@ -31,9 +28,13 @@ const SET_MENUTYPE = (state, data) => state.menuType = data
 
 const ADD_USER_INFO = (state, data) => state.userInfo = data
 
+
+const GET_AUTH_PATH = (state, data) => state.path = data
+
 export default {
     ADD_TAB,
     DEL_TAB,
     SET_MENUTYPE,
-    ADD_USER_INFO
+    ADD_USER_INFO,
+    GET_AUTH_PATH
 }

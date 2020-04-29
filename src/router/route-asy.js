@@ -21,7 +21,17 @@ const asyRoute = [{
             iconfont: 'iconfont iconyonghu2',
             needLogin: true, //需要登录
         },
-        children: []
+        children: [{
+            path: '/userList',
+            name: 'userList',
+            component: route.userList,
+            meta: {
+                parent: '',
+                name: '用户列表',
+                iconfont: 'iconfont iconyonghu2',
+                needLogin: true, //需要登录
+            },
+        }]
     },
     {
         path: '/authorityManage',

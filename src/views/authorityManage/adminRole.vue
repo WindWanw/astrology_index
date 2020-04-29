@@ -108,18 +108,38 @@
               ></el-switch>
             </el-form-item>
             <el-form-item label="角色权限" prop="menu_id">
-              <el-tree
-                :data="menuList"
-                :props="defaultProps"
-                accordion
-                show-checkbox
-                :highlight-current="true"
-                node-key="id"
-                ref="tree"
-                @check="getCheckedKeys()"
-                :default-checked-keys="form.menu_id"
-                :default-expand-all="true"
-              ></el-tree>
+              <div class="admin-role">
+                <div class="admin-role-menu">
+                  <el-tree
+                    :data="menuList"
+                    :props="defaultProps"
+                    accordion
+                    show-checkbox
+                    :highlight-current="true"
+                    node-key="id"
+                    ref="tree"
+                    @check="getCheckedKeys()"
+                    :default-checked-keys="form.menu_id"
+                    :default-expand-all="true"
+                    @node-click="handleNodeClick"
+                  ></el-tree>
+                </div>
+                <div class="admin-role-action" v-if="m_id">
+                  <el-checkbox
+                    :indeterminate="isIndeterminate"
+                    v-model="form.checkAll"
+                    @change="handleCheckAllChange"
+                  >全选</el-checkbox>
+                  <div style="margin: 15px 0;"></div>
+                  <el-checkbox-group v-model="form.action" @change="handleCheckedCitiesChange">
+                    <el-checkbox
+                      v-for="(item,index) in actionList"
+                      :key="index"
+                      value="item.id"
+                    >{{item.title}}</el-checkbox>
+                  </el-checkbox-group>
+                </div>
+              </div>
             </el-form-item>
           </el-form>
         </div>
@@ -149,6 +169,9 @@ export default {
       loading: false,
       isShow: false,
       dataList: [],
+      isIndeterminate: false,
+      actionList: [],
+      m_id: "",
       search: {
         page: 1,
         limit: 10
@@ -159,7 +182,9 @@ export default {
         role_code: "",
         describe: "",
         status: "1",
-        menu_id: []
+        menu_id: [],
+        checkAll: true,
+        action: []
       },
       menuList: [],
       defaultProps: {
@@ -180,6 +205,23 @@ export default {
   },
   watch: {},
   methods: {
+    handleCheckAllChange(val) {
+      this.form.action = val ? [] : [];
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      // let checkedCount = value.length;
+      // this.checkAll = checkedCount === this.cities.length;
+      // this.isIndeterminate =
+      //   checkedCount > 0 && checkedCount < this.cities.length;
+    },
+    handleNodeClick(data) {
+      this.m_id = data.id;
+
+      this.$api.getMenuAction({ m_id: this.m_id }).then(res => {
+        this.actionList = res.data || [];
+      });
+    },
     getCheckedKeys() {
       this.form.menu_id = this.$refs.tree.getCheckedKeys();
     },
@@ -223,7 +265,7 @@ export default {
       this.openAddEditDialog = true;
       if (type == "add") {
         this.$func.setDefaultData(this.form);
-        this.form.status="1";
+        this.form.status = "1";
       } else {
         this.$func.setAssignData(this.form, data);
       }
@@ -315,5 +357,16 @@ export default {
 }
 .el-dialog__footer {
   text-align: left;
+}
+.admin-role {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.admin-role-menu {
+  width: 50%;
+}
+.admin-role-action {
+  width: 50%;
 }
 </style>
