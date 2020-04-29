@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 16:36:41
+ * @LastEditTime: 2020-04-29 11:15:31
  */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
@@ -25,13 +25,13 @@ const authorityManage = () =>
 	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage')
 //用户设置
 const adminUser = () =>
-	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage/adminUser.vue')
+	import( /* webpackChunkName: "adminUser" */ '../views/authorityManage/adminUser.vue')
 //权限设置
 const adminRole = () =>
-	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage/adminRole.vue')
+	import( /* webpackChunkName: "adminRole" */ '../views/authorityManage/adminRole.vue')
 //菜单设置
 const adminMenu = () =>
-	import( /* webpackChunkName: "authorityManage" */ '../views/authorityManage/adminMenu.vue')
+	import( /* webpackChunkName: "adminMenu" */ '../views/authorityManage/adminMenu.vue')
 
 /**************************认证管理**************************/
 //认证管理
@@ -45,10 +45,10 @@ const userAuth = () =>
 	import( /* webpackChunkName: "userAuth" */ '../views/checkManage/userAuth.vue')
 
 /**************************服务管理**************************/
-//认证管理
+//服务管理
 const serviceManage = () =>
 	import( /* webpackChunkName: "serviceManage" */ '../views/serviceManage')
-//企业认证
+//学历提升
 const education = () =>
 	import( /* webpackChunkName: "education" */ '../views/serviceManage/education.vue')
 /**************************发布管理**************************/

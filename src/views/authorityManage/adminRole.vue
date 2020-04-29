@@ -95,6 +95,18 @@
                 show-word-limit
               ></el-input>
             </el-form-item>
+            <el-form-item label="角色状态" prop="status">
+              <el-switch
+                style="display: block"
+                v-model="form.status"
+                active-value="1"
+                inactive-value="0"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="启用"
+                inactive-text="禁用"
+              ></el-switch>
+            </el-form-item>
             <el-form-item label="角色权限" prop="menu_id">
               <el-tree
                 :data="menuList"
@@ -117,7 +129,7 @@
             :class="form.id ? 'iconbianji' : 'iconiconfontzhizuobiaozhunbduan20'"
             size="mini"
             :type="form.id ? 'primary' : 'success'"
-            @click="addRole()"
+            @click="addEditRole()"
           >{{form.id ? '修改' : '提交'}}</el-button>
           <el-button
             class="iconfont iconcancel1"
@@ -146,6 +158,7 @@ export default {
         role_name: "",
         role_code: "",
         describe: "",
+        status: "1",
         menu_id: []
       },
       menuList: [],
@@ -188,7 +201,7 @@ export default {
     },
     //关闭dialog
     closeDialog() {
-      this.openAddEditDialog=false;
+      this.openAddEditDialog = false;
       this.$func.setDefaultData(this.form);
     },
     //获取数据列表
@@ -207,29 +220,30 @@ export default {
     },
     //打开dialog操作
     openAddEdit(type, data) {
-
       this.openAddEditDialog = true;
       if (type == "add") {
         this.$func.setDefaultData(this.form);
+        this.form.status="1";
       } else {
         this.$func.setAssignData(this.form, data);
       }
       this.getMenuList();
     },
     //添加角色
-    addRole() {
-      // console.log(this.form);return ;
+    addEditRole() {
       if (!this.form.menu_id.length) {
         return this.$message.warning("必须选择权限");
       }
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.$api.addRole(this.form).then(res => {
-            this.$message[res.code ? "error" : "success"](res.message);
-            if (res.code) return;
-            this.getDataList();
-            this.openAddEditDialog = false;
-          });
+          this.$api[this.form.id ? "editRole" : "addRole"](this.form).then(
+            res => {
+              this.$message[res.code ? "error" : "success"](res.message);
+              if (res.code) return;
+              this.getDataList();
+              this.openAddEditDialog = false;
+            }
+          );
         }
       });
     },

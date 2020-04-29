@@ -139,7 +139,7 @@
                 size="mini"
                 show-password
                 :readonly="form.id ? true : false"
-                placeholder="请填写电话号码"
+                placeholder="请填写密码"
               ></el-input>
             </el-form-item>
 
