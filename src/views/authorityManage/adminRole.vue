@@ -131,11 +131,15 @@
                     @change="handleCheckAllChange"
                   >全选</el-checkbox>
                   <div style="margin: 15px 0;"></div>
-                  <el-checkbox-group v-model="form.action" @change="handleCheckedCitiesChange">
+                  <el-checkbox-group
+                    v-model="form.action"
+                    @change="handleCheckedCitiesChange"
+                  >
                     <el-checkbox
                       v-for="(item,index) in actionList"
+                      :label="item.id"
                       :key="index"
-                      value="item.id"
+                      :value="item.id"
                     >{{item.title}}</el-checkbox>
                   </el-checkbox-group>
                 </div>
@@ -205,15 +209,23 @@ export default {
   },
   watch: {},
   methods: {
+    //点击全选
     handleCheckAllChange(val) {
-      this.form.action = val ? [] : [];
+      let list = [];
+
+      this.actionList.forEach(item => {
+        list.push(item.id);
+      });
+
+      this.form.action = val ? list : [];
       this.isIndeterminate = false;
     },
     handleCheckedCitiesChange(value) {
-      // let checkedCount = value.length;
-      // this.checkAll = checkedCount === this.cities.length;
-      // this.isIndeterminate =
-      //   checkedCount > 0 && checkedCount < this.cities.length;
+      let checkedCount = value.length;
+
+      this.form.checkAll = checkedCount === this.actionList.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.actionList.length;
     },
     handleNodeClick(data) {
       this.m_id = data.id;
