@@ -124,21 +124,12 @@
                     @node-click="handleNodeClick"
                   ></el-tree>
                 </div>
-                <div class="admin-role-action" v-if="m_id">
-                  <el-checkbox
-                    :indeterminate="isIndeterminate"
-                    v-model="form.checkAll"
-                    @change="handleCheckAllChange"
-                  >全选</el-checkbox>
-                  <div style="margin: 15px 0;"></div>
-                  <el-checkbox-group
-                    v-model="form.action"
-                    @change="handleCheckedCitiesChange"
-                  >
+                <div class="admin-role-action" v-if="actionList && actionList.length">
+                  <el-checkbox-group v-model="form.action">
                     <el-checkbox
-                      v-for="(item,index) in actionList"
+                      v-for="item in actionList"
+                      :key="item.id"
                       :label="item.id"
-                      :key="index"
                       :value="item.id"
                     >{{item.title}}</el-checkbox>
                   </el-checkbox-group>
@@ -173,9 +164,7 @@ export default {
       loading: false,
       isShow: false,
       dataList: [],
-      isIndeterminate: false,
       actionList: [],
-      m_id: "",
       search: {
         page: 1,
         limit: 10
@@ -187,7 +176,6 @@ export default {
         describe: "",
         status: "1",
         menu_id: [],
-        checkAll: true,
         action: []
       },
       menuList: [],
@@ -209,30 +197,11 @@ export default {
   },
   watch: {},
   methods: {
-    //点击全选
-    handleCheckAllChange(val) {
-      let list = [];
-
-      this.actionList.forEach(item => {
-        list.push(item.id);
-      });
-
-      this.form.action = val ? list : [];
-      this.isIndeterminate = false;
-    },
-    handleCheckedCitiesChange(value) {
-      let checkedCount = value.length;
-
-      this.form.checkAll = checkedCount === this.actionList.length;
-      this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.actionList.length;
-    },
     handleNodeClick(data) {
-      this.m_id = data.id;
-
-      this.$api.getMenuAction({ m_id: this.m_id }).then(res => {
-        this.actionList = res.data || [];
-      });
+      if (this.actionList && this.actionList.length) {
+        this.actionList = [];
+      }
+      this.actionList = data.action;
     },
     getCheckedKeys() {
       this.form.menu_id = this.$refs.tree.getCheckedKeys();
@@ -257,6 +226,9 @@ export default {
     closeDialog() {
       this.openAddEditDialog = false;
       this.$func.setDefaultData(this.form);
+      this.form.menu_id = [];
+      this.form.action = [];
+      this.actionList = [];
     },
     //获取数据列表
     getDataList() {
