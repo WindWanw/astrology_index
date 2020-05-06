@@ -88,7 +88,6 @@
             <el-form-item label="角色描述" prop="describe">
               <el-input
                 type="textarea"
-                :autosize="{ minRows: 3, maxRows: 5}"
                 placeholder="请填写角色描述"
                 v-model="form.describe"
                 maxlength="200"
@@ -113,7 +112,6 @@
                   <el-tree
                     :data="menuList"
                     :props="defaultProps"
-                    accordion
                     show-checkbox
                     :highlight-current="true"
                     node-key="id"
@@ -125,14 +123,18 @@
                   ></el-tree>
                 </div>
                 <div class="admin-role-action" v-if="actionList && actionList.length">
-                  <el-checkbox-group v-model="form.action">
-                    <el-checkbox
-                      v-for="item in actionList"
-                      :key="item.id"
-                      :label="item.id"
-                      :value="item.id"
-                    >{{item.title}}</el-checkbox>
-                  </el-checkbox-group>
+                  <el-tree
+                    :data="actionList"
+                    :props="defaultProps"
+                    show-checkbox
+                    :highlight-current="true"
+                    node-key="id"
+                    ref="action"
+                    @check="getCheckedActionKeys"
+                    @check-change="getChangeActionKeys"
+                    :default-checked-keys="form.action"
+                    :default-expand-all="true"
+                  ></el-tree>
                 </div>
               </div>
             </el-form-item>
@@ -165,6 +167,7 @@ export default {
       isShow: false,
       dataList: [],
       actionList: [],
+      dataAction: [],
       search: {
         page: 1,
         limit: 10
@@ -197,14 +200,40 @@ export default {
   },
   watch: {},
   methods: {
+    //点击菜单显示操作
     handleNodeClick(data) {
       if (this.actionList && this.actionList.length) {
         this.actionList = [];
       }
-      this.actionList = data.action;
+      data.action.forEach(item => {
+        this.actionList.push({
+          label: item.title,
+          id: item.id
+        });
+      });
+
+      this.form.action = this.dataAction;
     },
+    //选中菜单
     getCheckedKeys() {
       this.form.menu_id = this.$refs.tree.getCheckedKeys();
+    },
+    //选中操作
+    getCheckedActionKeys() {
+      this.form.action = this.$refs.action.getCheckedKeys();
+
+      //将选中的操作id保存到dataAction中，点击菜单式，form.action会重新赋值
+      this.dataAction = this.dataAction.concat(this.form.action);
+      //合并数组时存在重复，该方法去重
+      this.dataAction = Array.from(new Set(this.dataAction));
+
+      console.log(this.dataAction);
+    },
+    //操作被取消时，从dataAction中删除id
+    getChangeActionKeys(data, checked) {
+      if (!checked) {
+        this.dataAction.splice(this.dataAction.indexOf(data.id), 1);
+      }
     },
 
     //分页
@@ -226,9 +255,8 @@ export default {
     closeDialog() {
       this.openAddEditDialog = false;
       this.$func.setDefaultData(this.form);
-      this.form.menu_id = [];
-      this.form.action = [];
       this.actionList = [];
+      this.dataAction = [];
     },
     //获取数据列表
     getDataList() {
@@ -252,11 +280,16 @@ export default {
         this.form.status = "1";
       } else {
         this.$func.setAssignData(this.form, data);
+        this.dataAction = data.action;
       }
+      console.log(this.form);
       this.getMenuList();
     },
     //添加角色
     addEditRole() {
+      if (this.dataAction && this.dataAction.length) {
+        this.form.action = this.dataAction;
+      }
       if (!this.form.menu_id.length) {
         return this.$message.warning("必须选择权限");
       }
@@ -285,6 +318,7 @@ export default {
   },
   created() {
     this.getDataList();
+    // console.log(typeof(null))
   }
 };
 </script>

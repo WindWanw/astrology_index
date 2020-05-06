@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-28 17:30:48
+ * @LastEditTime: 2020-05-06 15:24:26
  */
 const add = function (...addend) {
     let val = 0;
@@ -62,7 +62,7 @@ const setAssignData = (form, data) => {
 
         let t = typeof (data[i]);
 
-        if (t == "number") { //如果data中类型为数字的，则转换成字符串
+        if (t == "number" || (data[i] == null && t == "object")) { //如果data中类型为数字的，则转换成字符串
             form[i] = String(data[i]);
         } else {
             form[i] = data[i];
