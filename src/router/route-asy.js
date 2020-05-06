@@ -173,11 +173,33 @@ const asyRoute = [{
         component: route.systemManage,
         meta: {
             parent: '',
-            name: '系统设置',
+            name: '系统管理',
             iconfont: 'iconfont iconicon-test',
             needLogin: true, //需要登录
         },
-        children: []
+        children: [{
+            path: '/systemSetting',
+            name: 'systemSetting',
+            component: route.systemSetting,
+            meta: {
+                parent: '',
+                name: '系统设置',
+                iconfont: 'iconfont iconicon-test',
+                needLogin: true, //需要登录
+            },
+            children: [{
+                path: '/commonSetting',
+                name: 'commonSetting',
+                component: route.commonSetting,
+                meta: {
+                    parent: '',
+                    name: '常用设置',
+                    iconfont: 'iconfont iconicon-test',
+                    needLogin: true, //需要登录
+                },
+                children: []
+            }]
+        }],
     }
 
 ];

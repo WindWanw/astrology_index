@@ -12,7 +12,7 @@
     <!-- 一级菜单 -->
     <template v-for="item in asideList">
       <el-submenu
-        v-if="item.children && item.children.length && getAuthPath(item.path)"
+        v-if="item.children && item.children.length && getAuthPath(item.name)"
         :index="item.path"
         :key="item.path"
       >
@@ -24,7 +24,7 @@
         <!-- 二级菜单 -->
         <template v-for="itemChild in item.children">
           <el-submenu
-            v-if="itemChild.children && itemChild.children.length&& getAuthPath(itemChild.path)"
+            v-if="itemChild.children && itemChild.children.length&& getAuthPath(itemChild.name)"
             :index="itemChild.path"
             :key="itemChild.path"
           >
@@ -36,7 +36,7 @@
             <!-- 三级菜单 -->
             <template v-for="itemChild_Child in itemChild.children">
               <el-menu-item
-                v-if="getAuthPath(itemChild_Child.path)"
+                v-if="getAuthPath(itemChild_Child.name)"
                 :index="itemChild_Child.path"
                 :key="itemChild_Child.path"
               >
@@ -47,7 +47,7 @@
           </el-submenu>
 
           <el-menu-item
-            v-else-if="getAuthPath(itemChild.path)"
+            v-else-if="getAuthPath(itemChild.name)"
             :index="itemChild.path"
             :key="itemChild.path"
           >
@@ -58,7 +58,7 @@
         </template>
       </el-submenu>
 
-      <el-menu-item v-else-if="getAuthPath(item.path)" :index="item.path" :key="item.path">
+      <el-menu-item v-else-if="getAuthPath(item.name)" :index="item.path" :key="item.path">
         <i :class="item.meta.iconfont"></i>
         <span slot="title">{{item.meta.name}}</span>
       </el-menu-item>
@@ -88,11 +88,12 @@ export default {
   components: {},
   methods: {
     //检测路由
-    getAuthPath(path) {
+    getAuthPath(name) {
+
       let router = this.$store.getters.path;
 
       for (let i in router) {
-        if (router[i].code == path.slice(1) && router[i].status == "1") {
+        if (router[i].code == name && router[i].status == "1") {
           return true;
         }
       }

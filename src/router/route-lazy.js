@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-29 15:15:56
+ * @LastEditTime: 2020-05-06 09:18:03
  */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
@@ -67,6 +67,10 @@ const jobs = () =>
 
 const systemManage = () =>
 	import( /* webpackChunkName: "systemManage" */ '../views/systemManage')
+const systemSetting = () =>
+	import( /* webpackChunkName: "systemSetting" */ '../views/systemManage/systemSetting')
+const commonSetting = () =>
+	import( /* webpackChunkName: "commonSetting" */ '../views/systemManage/systemSetting/commonSetting.vue')
 
 export default {
 	login,
@@ -100,4 +104,6 @@ export default {
 
 
 	systemManage,
+	systemSetting,
+	commonSetting
 }
