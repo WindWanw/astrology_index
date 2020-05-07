@@ -2,13 +2,12 @@
   <div class="login">
     <div class="login-top">
       <div class="login-language">
-        <span>中文</span>|
-        <span>English</span>
+
       </div>
     </div>
     <div class="login-content">
       <div class="login_title">
-        <span>Astrology</span>
+        <span>广盈管理系统</span>
       </div>
       <div>
         <el-input
