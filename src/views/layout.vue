@@ -37,7 +37,7 @@ export default {
     //获取用户相关信息，将该信息保存在vue状态管理中
     getUserInfo() {
       this.$api.getUserInfo().then(res => {
-        if (res.code !='0000') {
+        if (res.code) {
           this.$message.error(res.message);
           this.$router.replace("/login");
           localStorage.clear("token");

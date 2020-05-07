@@ -291,6 +291,7 @@ export default {
     auditEnterpriseCertification() {
       this.$api.auditEnterpriseCertification(this.form).then(res => {
         this.$message[res.code ? 'error' : 'success'](res.message)
+        if(res.code) return ;
         this.authInfoDialog=false;
         this.getDataList();
       });

@@ -55,8 +55,8 @@ export default {
         return this.$message.error("密码不能为空，请填写密码");
       this.$api.login(this.form).then(res => {
 
-        this.$message[res.code!='0000' ? 'error' : 'success'](res.message);
-        if(res.code!='0000') return ;
+        this.$message[res.code ? 'error' : 'success'](res.message);
+        if(res.code) return ;
         localStorage.setItem("token",res.data.auth_token.access_token);
         this.$router.replace(this.url);
       });
