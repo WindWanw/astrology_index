@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-05-06 15:24:26
+ * @LastEditTime: 2020-05-08 18:02:08
  */
 const add = function (...addend) {
     let val = 0;
@@ -22,6 +22,7 @@ const add = function (...addend) {
 const setDefaultData = function (data) {
     for (let i in data) {
         let type = typeof (data[i]);
+
         switch (type) {
             case 'string':
                 data[i] = "";

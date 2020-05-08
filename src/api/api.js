@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-05-06 15:41:49
+ * @LastEditTime: 2020-05-08 17:50:36
  */
 import {
     fetchPost,
@@ -31,6 +31,10 @@ export default {
     getEmailSuffix(params) {
         return fetchGet('common/get/email/suffix', params);
     },
+    //发布  招聘/求职  相关数据配置信息（证书类别，注册情况，证书用途，薪资范畴，学历）
+    getAllConfig(params) {
+        return fetchGet('common/get/all/config', params);
+    },
 
 
     //企业认证审核列表
@@ -52,6 +56,14 @@ export default {
     //招聘列表
     getRecruitmentsList(params) {
         return fetchGet('post/post/recruitments/list', params);
+    },
+    //添加招聘信息
+    addRecruitments(params) {
+        return fetchPost('post/add/recruitments', params);
+    },
+    //修改招聘信息
+    editRecruitments(params) {
+        return fetchPost('post/edit/recruitments', params);
     },
     //置顶
     setTop(params) {
