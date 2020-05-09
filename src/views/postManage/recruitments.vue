@@ -53,7 +53,7 @@
           type="primary"
           class="iconfont icontianjia"
           size="mini"
-          @click="openAdd('add')"
+          @click="openAddEdit('add')"
           style="margin-left:5px;"
         >添加</el-button>
       </div>
@@ -100,12 +100,12 @@
               @click="setTop(scope.row)"
             >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button>
             <el-button
-              title="设置"
-              type="warning"
+              title="查看"
+              type="primary"
               size="medium"
-              class="iconfont iconicon-test1"
-              @click="openAuthInfo(scope.row)"
-            >设置</el-button>
+              class="iconfont iconshenhe3"
+              @click="openAddEdit('edit',scope.row)"
+            >查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -252,8 +252,9 @@
                 type="textarea"
                 placeholder="请填写备注信息"
                 v-model="form.info"
-                maxlength="200"
+                maxlength="300"
                 show-word-limit
+                :autosize="{ minRows: 3, maxRows: 5}"
               ></el-input>
             </el-form-item>
           </el-form>
@@ -418,7 +419,7 @@ export default {
         });
     },
     //打开添加dialog
-    openAdd(type, data) {
+    openAddEdit(type, data) {
       this.openAddEditDialog = true;
       if (type == "add") {
         this.$func.setDefaultData(this.form);
@@ -427,6 +428,10 @@ export default {
         this.form.negotiable = "0";
         this.form.status = "1";
         this.form.top = "0";
+      } else {
+        this.$func.setAssignData(this.form, data);
+        this.form.registration_status = parseInt(data.registration_status);
+        this.form.certificate_utility = parseInt(data.certificate_utility);
       }
       console.log(this.form);
       this.getAllConfig();
