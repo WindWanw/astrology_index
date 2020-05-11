@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-24 13:34:10
+ * @LastEditTime: 2020-05-11 17:04:58
  */
 //获取性别
 const getSexStatus = (status) => status == '0' ? '女' : '男';
@@ -69,11 +69,47 @@ const getArticleModality = modal => {
     }
 }
 
+//注册情况
+const getRegistrationStatus = status => {
+    switch (String(status)) {
+        case '1':
+            return '不限';
+            break;
+        case '2':
+            return '初始';
+            break;
+        case '3':
+            return '专注';
+            break;
+        default:
+            return '不限';
+    }
+}
+
+//证书用途
+const getCertificateUtility = u => {
+    switch (String(u)) {
+        case '1':
+            return '不限';
+            break;
+        case '2':
+            return '资质';
+            break;
+        case '3':
+            return '项目';
+            break;
+        default:
+            return '不限';
+    }
+}
+
 
 
 export default {
     getSexStatus,
     getColor,
     getAuthStatus,
-    getArticleModality
+    getArticleModality,
+    getRegistrationStatus,
+    getCertificateUtility
 }

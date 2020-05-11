@@ -19,28 +19,79 @@
           size="mini"
           @keyup.enter.native="findData"
         ></el-input>
+        <el-input
+          class="search_warp_default"
+          clearable
+          v-model="search.title"
+          placeholder="请输入标题"
+          size="mini"
+          @keyup.enter.native="findData"
+        ></el-input>
         <el-select
           class="search_warp_default"
-          style="width:200px;"
-          v-model="search.status"
-          size="mini"
+          v-model="search.certificate_type"
           clearable
-          placeholder="请选择招聘信息是否有效"
-          @keyup.enter.native="findData"
+          placeholder="请选择证书类别"
+          size="mini"
+          @change="getProfessional"
         >
-          <el-option key="1" label="是" value="1"></el-option>
-          <el-option key="0" label="否" value="0"></el-option>
+          <el-option
+            v-for="item in certificateTypeList"
+            :key="item.value"
+            :label="item.key"
+            :value="item.value"
+          ></el-option>
         </el-select>
         <el-select
           class="search_warp_default"
-          v-model="search.top"
+          v-model="search.professional"
           size="mini"
           clearable
-          placeholder="请选择是否置顶"
-          @keyup.enter.native="findData"
+          placeholder="请选择所需专业"
         >
-          <el-option key="1" label="是" value="1"></el-option>
-          <el-option key="0" label="否" value="0"></el-option>
+          <el-option
+            v-for="item in professionalList"
+            :key="item.value"
+            :label="item.key"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-cascader
+          class="search_warp_default"
+          :options="citys"
+          clearable
+          filterable
+          v-model="search.city"
+          placeholder="请选择证书省市"
+          size="mini"
+        ></el-cascader>
+        <el-select
+          class="search_warp_default"
+          v-model="search.registration_status"
+          size="mini"
+          clearable
+          placeholder="请选择注册情况"
+        >
+          <el-option
+            v-for="item in registrationList"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+          ></el-option>
+        </el-select>
+        <el-select
+          class="search_warp_default"
+          v-model="search.certificate_utility"
+          size="mini"
+          clearable
+          placeholder="请选择证书用途"
+        >
+          <el-option
+            v-for="item in certificateUtilityList"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+          ></el-option>
         </el-select>
         <el-button
           type="success"
@@ -55,7 +106,7 @@
           size="mini"
           @click="openAddEdit('add')"
           style="margin-left:5px;"
-        >添加</el-button>
+        >发布</el-button>
       </div>
     </div>
     <div class="content">
@@ -67,13 +118,20 @@
         v-loading="loading"
         class="user-table"
       >
-        <el-table-column prop="id" label="序号" align="center"></el-table-column>
-        <el-table-column prop="phone" label="发布人账号" align="center">
+        <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+        <el-table-column prop="recruitments_job" label="标题" align="center"></el-table-column>
+        <el-table-column prop="certificate" label="证书类别" align="center"></el-table-column>
+        <el-table-column prop="professional" label="所需专业" align="center"></el-table-column>
+        <el-table-column prop="address" label="用证地区" align="center"></el-table-column>
+        <el-table-column prop="registration_status" label="注册情况" align="center">
+          <template slot-scope="scope">{{scope.row.registration_status | getRegistrationStatus}}</template>
+        </el-table-column>
+        <el-table-column prop="certificate_utility" label="证书用途" align="center">
+          <template slot-scope="scope">{{scope.row.certificate_utility | getCertificateUtility}}</template>
+        </el-table-column>
+        <el-table-column prop="phone" label="发布人" align="center">
           <template slot-scope="scope">{{scope.row.user.phone}}</template>
         </el-table-column>
-        <el-table-column prop="company_name" label="企业名称" align="center"></el-table-column>
-        <el-table-column prop="professional" label="所需专业" align="center"></el-table-column>
-        <el-table-column prop="info" label="发布内容" align="center"></el-table-column>
         <el-table-column prop="created_at" label="发布时间" align="center"></el-table-column>
         <el-table-column prop="top" label="是否置顶" align="center">
           <template slot-scope="scope">
@@ -91,14 +149,14 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button
+            <!-- <el-button
               :title="scope.row.top=='0' ? '置顶该招聘信息' : '取消置顶'"
               :type="scope.row.top=='0' ? 'success' : 'danger'"
               size="medium"
               class="iconfont"
               :class="scope.row.top=='0' ? 'iconzhiding2' : 'iconxiazai-'"
               @click="setTop(scope.row)"
-            >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button>
+            >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button> -->
             <el-button
               title="查看"
               type="primary"
@@ -294,8 +352,12 @@ export default {
         page: 1,
         limit: 10,
         user_phone: "",
-        status: "",
-        top: ""
+        title: "",
+        certificate_type: "",
+        professional: "",
+        city: [],
+        registration_status: "",
+        certificate_utility: ""
       },
       form: {
         id: "",
@@ -433,8 +495,6 @@ export default {
         this.form.registration_status = parseInt(data.registration_status);
         this.form.certificate_utility = parseInt(data.certificate_utility);
       }
-      console.log(this.form);
-      this.getAllConfig();
     },
     addEdit() {
       this.loading = true;
@@ -455,6 +515,7 @@ export default {
   },
   created() {
     this.getDataList();
+    this.getAllConfig();
   }
 };
 </script>

@@ -19,28 +19,79 @@
           size="mini"
           @keyup.enter.native="findData"
         ></el-input>
+        <el-input
+          class="search_warp_default"
+          clearable
+          v-model="search.title"
+          placeholder="请输入标题"
+          size="mini"
+          @keyup.enter.native="findData"
+        ></el-input>
         <el-select
           class="search_warp_default"
-          style="width:200px;"
-          v-model="search.status"
-          size="mini"
+          v-model="search.certificate_type"
           clearable
-          placeholder="请选择招聘信息是否有效"
-          @keyup.enter.native="findData"
+          placeholder="请选择证书类别"
+          size="mini"
+          @change="getProfessional"
         >
-          <el-option key="1" label="是" value="1"></el-option>
-          <el-option key="0" label="否" value="0"></el-option>
+          <el-option
+            v-for="item in certificateTypeList"
+            :key="item.value"
+            :label="item.key"
+            :value="item.value"
+          ></el-option>
         </el-select>
         <el-select
           class="search_warp_default"
-          v-model="search.top"
+          v-model="search.professional"
           size="mini"
           clearable
-          placeholder="请选择是否置顶"
-          @keyup.enter.native="findData"
+          placeholder="请选择所需专业"
         >
-          <el-option key="1" label="是" value="1"></el-option>
-          <el-option key="0" label="否" value="0"></el-option>
+          <el-option
+            v-for="item in professionalList"
+            :key="item.value"
+            :label="item.key"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <el-cascader
+          class="search_warp_default"
+          :options="citys"
+          clearable
+          filterable
+          v-model="search.city"
+          placeholder="请选择证书省市"
+          size="mini"
+        ></el-cascader>
+        <el-select
+          class="search_warp_default"
+          v-model="search.registration_status"
+          size="mini"
+          clearable
+          placeholder="请选择注册情况"
+        >
+          <el-option
+            v-for="item in registrationList"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+          ></el-option>
+        </el-select>
+        <el-select
+          class="search_warp_default"
+          v-model="search.certificate_utility"
+          size="mini"
+          clearable
+          placeholder="请选择证书用途"
+        >
+          <el-option
+            v-for="item in certificateUtilityList"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+          ></el-option>
         </el-select>
         <el-button
           type="success"
@@ -49,6 +100,13 @@
           @click="findData"
           style="margin-left:5px;"
         >搜索</el-button>
+        <el-button
+          type="primary"
+          class="iconfont icontianjia"
+          size="mini"
+          @click="openAddEdit('add')"
+          style="margin-left:5px;"
+        >发布</el-button>
       </div>
     </div>
     <div class="content">
@@ -60,19 +118,19 @@
         v-loading="loading"
         class="user-table"
       >
-        <el-table-column prop="id" label="序号" align="center"></el-table-column>
-        <el-table-column prop="phone" label="发布人账号" align="center">
+        <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+        <el-table-column prop="certificate" label="证书类别" align="center"></el-table-column>
+        <el-table-column prop="professional" label="所需专业" align="center"></el-table-column>
+        <el-table-column prop="address" label="证书地区" align="center"></el-table-column>
+        <el-table-column prop="registration_status" label="注册情况" align="center">
+          <template slot-scope="scope">{{scope.row.registration_status | getRegistrationStatus}}</template>
+        </el-table-column>
+      <el-table-column prop="registration_status" label="工作性质" align="center">
+          <template slot-scope="scope">{{scope.row.registration_status | getRegistrationStatus}}</template>
+        </el-table-column>
+        <el-table-column prop="phone" label="发布人" align="center">
           <template slot-scope="scope">{{scope.row.user.phone}}</template>
         </el-table-column>
-        <el-table-column prop="name" label="姓名" align="center"></el-table-column>
-        <el-table-column prop="sex" label="性别" align="center"></el-table-column>
-        <el-table-column prop="phone" label="联系电话" align="center"></el-table-column>
-        <el-table-column prop="salary_category" label="薪资范畴" align="center"></el-table-column>
-        <el-table-column prop="education" label="学历" align="center"></el-table-column>
-        <el-table-column prop="certificate_type" label="证书类别" align="center"></el-table-column>
-        <el-table-column prop="professional" label="所需专业" align="center"></el-table-column>
-        <el-table-column prop="work_type" label="工作性质" align="center"></el-table-column>
-        <el-table-column prop="current_state" label="目前状态" align="center"></el-table-column>
         <el-table-column prop="created_at" label="发布时间" align="center"></el-table-column>
         <el-table-column prop="top" label="是否置顶" align="center">
           <template slot-scope="scope">
@@ -90,21 +148,21 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button
+            <!-- <el-button
               :title="scope.row.top=='0' ? '置顶该招聘信息' : '取消置顶'"
               :type="scope.row.top=='0' ? 'success' : 'danger'"
               size="medium"
               class="iconfont"
               :class="scope.row.top=='0' ? 'iconzhiding2' : 'iconxiazai-'"
               @click="setTop(scope.row)"
-            >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button>
+            >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button> -->
             <el-button
-              title="设置"
-              type="warning"
+              title="查看"
+              type="primary"
               size="medium"
-              class="iconfont iconicon-test1"
-              @click="openAuthInfo(scope.row)"
-            >设置</el-button>
+              class="iconfont iconshenhe3"
+              @click="openAddEdit('edit',scope.row)"
+            >查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -119,24 +177,230 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="dataList.total"
       ></el-pagination>
+
+      <el-dialog
+        :title="form.id ? '修改求职信息' : '发布求职信息'"
+        :visible.sync="openAddEditDialog"
+        v-loading="loading"
+        top="30px"
+        width="60%"
+        :before-close="beforeCloseDialog"
+        @close="closeDialog()"
+      >
+        <div>
+          <el-form
+            ref="form"
+            :rules="rules"
+            label-position="left"
+            label-width="120px"
+            :model="form"
+          >
+            <el-form-item label="招聘岗位" prop="recruitments_job">
+              <el-input v-model="form.recruitments_job" size="mini" placeholder="请填写招聘岗位"></el-input>
+            </el-form-item>
+            <el-form-item label="证书类别" prop="certificate_type">
+              <el-select
+                v-model="form.certificate_type"
+                clearable
+                placeholder="请选择证书类别"
+                @change="getProfessional"
+              >
+                <el-option
+                  v-for="item in certificateTypeList"
+                  :key="item.value"
+                  :label="item.key"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="所需专业" prop="professional">
+              <el-select v-model="form.professional" clearable placeholder="请选择所需专业">
+                <el-option
+                  v-for="item in professionalList"
+                  :key="item.value"
+                  :label="item.key"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="注册情况" prop="registration_status">
+              <el-radio-group v-model="form.registration_status">
+                <el-radio
+                  style="margin-top=5px;"
+                  v-for="(item,index) in registrationList"
+                  :key="index"
+                  :label="item.key"
+                >{{item.value}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="证书用途" prop="certificate_utility">
+              <el-radio-group v-model="form.certificate_utility">
+                <el-radio
+                  style="margin-top=5px;"
+                  v-for="(item,index) in certificateUtilityList"
+                  :key="index"
+                  :label="item.key"
+                >{{item.value}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="证书省市" prop="city">
+              <el-cascader
+                :options="citys"
+                clearable
+                filterable
+                v-model="form.city"
+                placeholder="请选择证书省市"
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item label="企业名称" prop="company_name">
+              <el-input v-model="form.company_name" size="mini" placeholder="请填写企业名称"></el-input>
+            </el-form-item>
+            <el-form-item label="联系方式" prop="phone">
+              <el-input v-model="form.phone" size="mini" placeholder="请填写联系方式"></el-input>
+            </el-form-item>
+            <el-form-item label="薪资范畴" prop="salary_category">
+              <el-select v-model="form.salary_category" clearable placeholder="请选择薪资范畴">
+                <el-option
+                  v-for="item in salaryList"
+                  :key="item.value"
+                  :label="item.key"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="是否面议" prop="negotiable">
+              <el-switch
+                style="display: block"
+                v-model="form.negotiable"
+                active-value="1"
+                inactive-value="0"
+                active-color="#00FF00"
+                inactive-color="#FF0000"
+                active-text="是"
+                inactive-text="否"
+              ></el-switch>
+            </el-form-item>
+            <el-form-item label="是否上线" prop="status">
+              <el-switch
+                style="display: block"
+                v-model="form.status"
+                active-value="1"
+                inactive-value="0"
+                active-color="#00FF00"
+                inactive-color="#FF0000"
+                active-text="是"
+                inactive-text="否"
+              ></el-switch>
+            </el-form-item>
+            <el-form-item label="是否置顶" prop="top">
+              <el-switch
+                style="display: block"
+                v-model="form.top"
+                active-value="1"
+                inactive-value="0"
+                active-color="#00FF00"
+                inactive-color="#FF0000"
+                active-text="是"
+                inactive-text="否"
+              ></el-switch>
+            </el-form-item>
+            <el-form-item label="备注信息" prop="info">
+              <el-input
+                type="textarea"
+                placeholder="请填写备注信息"
+                v-model="form.info"
+                maxlength="300"
+                show-word-limit
+                :autosize="{ minRows: 3, maxRows: 5}"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer btn">
+          <el-button
+            class="iconfont"
+            :class="form.id ? 'iconbianji' : 'iconiconfontzhizuobiaozhunbduan20'"
+            size="mini"
+            :type="form.id ? 'primary' : 'success'"
+            @click="addEdit()"
+          >{{form.id ? '修改' : '提交'}}</el-button>
+          <el-button
+            class="iconfont iconcancel1"
+            size="mini"
+            type="warning"
+            @click="openAddEditDialog = false"
+          >取 消</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 <script>
+import province from "@/config/province";
+
 export default {
   data() {
     return {
       loading: false,
       isShow: false,
       isClear: false,
+      openAddEditDialog: false,
       dataList: [],
+      citys: province,
       search: {
         page: 1,
         limit: 10,
         user_phone: "",
-        status: "",
-        top: ""
+        title: "",
+        certificate_type: "",
+        professional: "",
+        city: [],
+        registration_status: "",
+        certificate_utility: ""
       },
+      form: {
+        id: "",
+        recruitments_job: "",
+        certificate_type: "",
+        professional: "",
+        registration_status: 1,
+        certificate_utility: 1,
+        city: [],
+        company_name: "",
+        phone: "",
+        salary_category: "",
+        negotiable: "0",
+        status: "1",
+        top: "0",
+        info: ""
+      },
+      rules: {
+        recruitments_job: [
+          { required: true, message: "请填写招聘岗位", trigger: "blur" }
+        ],
+        certificate_type: [
+          { required: true, message: "请选择证书类别", trigger: "change" }
+        ],
+        professional: [
+          { required: true, message: "请选择所需专业", trigger: "change" }
+        ],
+        city: [
+          { required: true, message: "请选择证书省市", trigger: "change" }
+        ],
+        company_name: [
+          { required: true, message: "请填写企业名称", trigger: "blur" }
+        ],
+        phone: [{ required: true, message: "请填写招聘岗位", trigger: "blur" }],
+        salary_category: [
+          { required: true, message: "请选择薪资范畴", trigger: "change" }
+        ],
+        info: [{ required: true, message: "请填写备注信息", trigger: "blur" }]
+      },
+      certificateTypeList: [],
+      professionalList: [],
+      registrationList: [],
+      certificateUtilityList: [],
+      salaryList: []
     };
   },
   watch: {},
@@ -163,6 +427,32 @@ export default {
       this.getDataList();
       this.isShow = true;
     },
+    beforeCloseDialog(done) {
+      this.$confirm("确定要关闭吗？").then(_ => {
+        done();
+      });
+    },
+    //关闭dialog
+    closeDialog() {
+      this.$func.setDefaultData(this.form);
+    },
+    //获取所有配置数据
+    getAllConfig() {
+      this.$api.getAllConfig().then(res => {
+        this.certificateTypeList = res.data.certificate_category || [];
+        this.registrationList = res.data.registration_status || [];
+        this.certificateUtilityList = res.data.certificate_utility || [];
+        this.salaryList = res.data.salary_category || [];
+      });
+    },
+    //根据证书类别获取所有专业
+    getProfessional(value) {
+      this.certificateTypeList.forEach(item => {
+        if (item.value == value) {
+          this.professionalList = item.children || [];
+        }
+      });
+    },
     //获取数据列表
     getDataList() {
       this.loading = true;
@@ -173,14 +463,13 @@ export default {
     },
     //置顶操作
     setTop(data) {
-      
       let top = 1;
-      if (data.top=='1') {
+      if (data.top == "1") {
         top = 0;
       }
       this.$api
         .setTop({
-          type: "jobs",
+          type: "recruitments",
           id: data.id,
           top: top
         })
@@ -189,10 +478,43 @@ export default {
           if (res.code) return;
           this.getDataList();
         });
+    },
+    //打开添加dialog
+    openAddEdit(type, data) {
+      this.openAddEditDialog = true;
+      if (type == "add") {
+        this.$func.setDefaultData(this.form);
+        this.form.registration_status = 1;
+        this.form.certificate_utility = 1;
+        this.form.negotiable = "0";
+        this.form.status = "1";
+        this.form.top = "0";
+      } else {
+        this.$func.setAssignData(this.form, data);
+        this.form.registration_status = parseInt(data.registration_status);
+        this.form.certificate_utility = parseInt(data.certificate_utility);
+      }
+    },
+    addEdit() {
+      this.loading = true;
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.$api[this.form.id ? "editRecruitments" : "addRecruitments"](
+            this.form
+          ).then(res => {
+            this.$message[res.code ? "error" : "success"](res.message);
+            if (res.code) return;
+            this.openAddEditDialog = false;
+            this.getDataList();
+          });
+        }
+        this.loading = false;
+      });
     }
   },
   created() {
     this.getDataList();
+    this.getAllConfig();
   }
 };
 </script>
@@ -249,5 +571,8 @@ export default {
 }
 .el-dialog__footer {
   text-align: left;
+}
+.el-radio-group[data-v-4687dc57] {
+  margin: 4px 0;
 }
 </style>
