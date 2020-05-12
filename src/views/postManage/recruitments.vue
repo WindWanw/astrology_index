@@ -137,6 +137,7 @@
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.top=='0' ? 'danger' : 'success'"
+              @click="setTop(scope.row)"
             >{{scope.row.top=='1' ? '是' : '否'}}</el-tag>
           </template>
         </el-table-column>
@@ -144,6 +145,7 @@
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.status=='0' ? 'danger' : 'success'"
+              @click="setStatus(scope.row)"
             >{{scope.row.status=='1' ? '是' : '否'}}</el-tag>
           </template>
         </el-table-column>
@@ -156,7 +158,7 @@
               class="iconfont"
               :class="scope.row.top=='0' ? 'iconzhiding2' : 'iconxiazai-'"
               @click="setTop(scope.row)"
-            >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button> -->
+            >{{scope.row.top=='0' ? '置顶' :'取消'}}</el-button>-->
             <el-button
               title="查看"
               type="primary"
@@ -200,30 +202,34 @@
               <el-input v-model="form.recruitments_job" size="mini" placeholder="请填写招聘岗位"></el-input>
             </el-form-item>
             <el-form-item label="证书类别" prop="certificate_type">
-              <el-select
-                v-model="form.certificate_type"
-                clearable
-                placeholder="请选择证书类别"
-                @change="getProfessional"
-              >
-                <el-option
-                  v-for="item in certificateTypeList"
-                  :key="item.value"
-                  :label="item.key"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+              <el-col :span="8">
+                <el-select
+                  v-model="form.certificate_type"
+                  clearable
+                  placeholder="请选择证书类别"
+                  @change="getProfessional"
+                >
+                  <el-option
+                    v-for="item in certificateTypeList"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="2">专业</el-col>
+              <el-col :span="14">
+                <el-select v-model="form.professional" clearable placeholder="请选择所需专业">
+                  <el-option
+                    v-for="item in professionalList"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-col>
             </el-form-item>
-            <el-form-item label="所需专业" prop="professional">
-              <el-select v-model="form.professional" clearable placeholder="请选择所需专业">
-                <el-option
-                  v-for="item in professionalList"
-                  :key="item.value"
-                  :label="item.key"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
+
             <el-form-item label="注册情况" prop="registration_status">
               <el-radio-group v-model="form.registration_status">
                 <el-radio
@@ -260,16 +266,21 @@
               <el-input v-model="form.phone" size="mini" placeholder="请填写联系方式"></el-input>
             </el-form-item>
             <el-form-item label="薪资范畴" prop="salary_category">
-              <el-select v-model="form.salary_category" clearable placeholder="请选择薪资范畴">
-                <el-option
-                  v-for="item in salaryList"
-                  :key="item.value"
-                  :label="item.key"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+              <el-col :span="8">
+                <el-select v-model="form.salary_category" clearable placeholder="请选择薪资范畴">
+                  <el-option
+                    v-for="item in salaryList"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="16">
+                <el-checkbox v-model="form.negotiable">面议</el-checkbox>
+              </el-col>
             </el-form-item>
-            <el-form-item label="是否面议" prop="negotiable">
+            <!-- <el-form-item label="是否面议" prop="negotiable">
               <el-switch
                 style="display: block"
                 v-model="form.negotiable"
@@ -280,8 +291,8 @@
                 active-text="是"
                 inactive-text="否"
               ></el-switch>
-            </el-form-item>
-            <el-form-item label="是否上线" prop="status">
+            </el-form-item>-->
+            <!-- <el-form-item label="是否上线" prop="status">
               <el-switch
                 style="display: block"
                 v-model="form.status"
@@ -304,7 +315,7 @@
                 active-text="是"
                 inactive-text="否"
               ></el-switch>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="备注信息" prop="info">
               <el-input
                 type="textarea"
@@ -370,9 +381,9 @@ export default {
         company_name: "",
         phone: "",
         salary_category: "",
-        negotiable: "0",
-        status: "1",
-        top: "0",
+        negotiable: false,
+        // status: "1",
+        // top: "0",
         info: ""
       },
       rules: {
@@ -381,9 +392,6 @@ export default {
         ],
         certificate_type: [
           { required: true, message: "请选择证书类别", trigger: "change" }
-        ],
-        professional: [
-          { required: true, message: "请选择所需专业", trigger: "change" }
         ],
         city: [
           { required: true, message: "请选择证书省市", trigger: "change" }
@@ -395,7 +403,6 @@ export default {
         salary_category: [
           { required: true, message: "请选择薪资范畴", trigger: "change" }
         ],
-        info: [{ required: true, message: "请填写备注信息", trigger: "blur" }]
       },
       certificateTypeList: [],
       professionalList: [],
@@ -480,6 +487,24 @@ export default {
           this.getDataList();
         });
     },
+    //上线操作
+    setStatus(data) {
+      let status = 1;
+      if (data.status == "1") {
+        status = 0;
+      }
+      this.$api
+        .setStatus({
+          type: "recruitments",
+          id: data.id,
+          status: status
+        })
+        .then(res => {
+          this.$message[res.code ? "error" : "success"](res.message);
+          if (res.code) return;
+          this.getDataList();
+        });
+    },
     //打开添加dialog
     openAddEdit(type, data) {
       this.openAddEditDialog = true;
@@ -487,9 +512,9 @@ export default {
         this.$func.setDefaultData(this.form);
         this.form.registration_status = 1;
         this.form.certificate_utility = 1;
-        this.form.negotiable = "0";
-        this.form.status = "1";
-        this.form.top = "0";
+        this.form.negotiable = false;
+        // this.form.status = "1";
+        // this.form.top = "0";
       } else {
         this.$func.setAssignData(this.form, data);
         this.form.registration_status = parseInt(data.registration_status);

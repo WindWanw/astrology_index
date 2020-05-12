@@ -164,6 +164,17 @@ const asyRoute = [{
                     iconfont: 'iconfont iconqiuzhizhuangtai',
                     needLogin: true, //需要登录
                 },
+            },
+            {
+                path: '/building',
+                name: 'building',
+                component: route.building,
+                meta: {
+                    parent: '发布管理',
+                    name: '建筑圈',
+                    iconfont: 'iconfont iconjianzhu1',
+                    needLogin: true, //需要登录
+                },
             }
         ]
     },

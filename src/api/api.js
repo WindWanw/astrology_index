@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-05-08 17:50:36
+ * @LastEditTime: 2020-05-12 14:44:00
  */
 import {
     fetchPost,
@@ -69,9 +69,33 @@ export default {
     setTop(params) {
         return fetchGet('post/set/top', params);
     },
+    //上线
+    setStatus(params) {
+        return fetchGet('post/set/status', params);
+    },
     //求职列表
     getJobsList(params) {
         return fetchGet('post/post/jobs/list', params);
+    },
+    //求职列表
+    addJobs(params) {
+        return fetchPost('post/add/jobs', params);
+    },
+    //求职列表
+    editJobs(params) {
+        return fetchPost('post/edit/jobs', params);
+    },
+    //建筑圈列表
+    getBuildingList(params) {
+        return fetchGet('post/get/building/list', params);
+    },
+    //添加建筑圈
+    addBuildng(params) {
+        return fetchPost('post/add/building', params);
+    },
+    //修改建筑圈
+    editBuilding(params) {
+        return fetchPost('post/edit/buildiong', params);
     },
     //后台权限角色列表
     getRoleList(params) {
