@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-05-12 14:44:00
+ * @LastEditTime: 2020-05-12 17:04:23
  */
 import {
     fetchPost,
@@ -90,12 +90,12 @@ export default {
         return fetchGet('post/get/building/list', params);
     },
     //添加建筑圈
-    addBuildng(params) {
+    addBuilding(params) {
         return fetchPost('post/add/building', params);
     },
     //修改建筑圈
     editBuilding(params) {
-        return fetchPost('post/edit/buildiong', params);
+        return fetchPost('post/edit/building', params);
     },
     //后台权限角色列表
     getRoleList(params) {

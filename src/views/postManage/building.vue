@@ -200,8 +200,6 @@
         </div>
         <span slot="footer" class="dialog-footer btn">
           <el-button
-            :disabled="form.id ? true : false"
-            :title="form.id ? '目前不支持修改' : '提交求职信息'"
             class="iconfont"
             :class="form.id ? 'iconbianji' : 'iconiconfontzhizuobiaozhunbduan20'"
             size="mini"
@@ -245,7 +243,7 @@ export default {
         category: "",
         title: "",
         info: "",
-        image: []
+        image: [],
       },
       rules: {
         category: [
@@ -347,7 +345,7 @@ export default {
       }
     },
     addEdit() {
-      this.loading = true;
+      // this.loading = true;
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.$api[this.form.id ? "editBuilding" : "addBuilding"](

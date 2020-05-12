@@ -195,7 +195,7 @@
                   v-model="form.certificate_type"
                   clearable
                   placeholder="请选择证书类别"
-                  @change="getProfessional"
+                  @change="getProfessional1"
                 >
                   <el-option
                     v-for="item in certificateTypeList"
@@ -209,7 +209,7 @@
               <el-col :span="12">
                 <el-select v-model="form.professional" clearable placeholder="请选择所需专业">
                   <el-option
-                    v-for="item in professionalList"
+                    v-for="item in professionalList1"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -319,7 +319,7 @@
                   v-model="form.other_certificate"
                   clearable
                   placeholder="请选择证书类别"
-                  @change="getProfessional"
+                  @change="getProfessional2"
                 >
                   <el-option
                     v-for="item in certificateTypeList"
@@ -333,7 +333,7 @@
               <el-col :span="14">
                 <el-select v-model="form.other_professional" clearable placeholder="请选择专业">
                   <el-option
-                    v-for="item in professionalList"
+                    v-for="item in professionalList2"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -447,6 +447,8 @@ export default {
       },
       certificateTypeList: [],
       professionalList: [],
+      professionalList1: [],
+      professionalList2: [],
       registrationList: [],
       workTypeList: [],
       certificateUtilityList: [],
@@ -506,6 +508,20 @@ export default {
         }
       });
     },
+    getProfessional1(value) {
+      this.certificateTypeList.forEach(item => {
+        if (item.value == value) {
+          this.professionalList1 = item.children || [];
+        }
+      });
+    },
+    getProfessional2(value) {
+      this.certificateTypeList.forEach(item => {
+        if (item.value == value) {
+          this.professionalList2 = item.children || [];
+        }
+      });
+    },
     //获取数据列表
     getDataList() {
       this.loading = true;
@@ -561,10 +577,14 @@ export default {
         this.form.work_type = "1";
         this.form.sex = "0";
         this.form.negotiable = false;
+        this.professionalList1 = [];
+        this.professionalList2 = [];
       } else {
         this.$func.setAssignData(this.form, data);
         this.form.registration_status = parseInt(data.registration_status);
         this.form.certificate_utility = parseInt(data.certificate_utility);
+        this.getProfessional1(this.form.certificate_type)
+        this.getProfessional2(this.form.other_certificate)
       }
     },
     addEdit() {

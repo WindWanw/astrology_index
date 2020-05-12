@@ -33,7 +33,7 @@
           clearable
           placeholder="请选择证书类别"
           size="mini"
-          @change="getProfessional"
+          @change="getProfessional1"
         >
           <el-option
             v-for="item in certificateTypeList"
@@ -50,7 +50,7 @@
           placeholder="请选择所需专业"
         >
           <el-option
-            v-for="item in professionalList"
+            v-for="item in professionalList1"
             :key="item.value"
             :label="item.key"
             :value="item.value"
@@ -402,10 +402,11 @@ export default {
         phone: [{ required: true, message: "请填写招聘岗位", trigger: "blur" }],
         salary_category: [
           { required: true, message: "请选择薪资范畴", trigger: "change" }
-        ],
+        ]
       },
       certificateTypeList: [],
       professionalList: [],
+      professionalList1: [],
       registrationList: [],
       certificateUtilityList: [],
       salaryList: []
@@ -455,11 +456,22 @@ export default {
     },
     //根据证书类别获取所有专业
     getProfessional(value) {
-      this.certificateTypeList.forEach(item => {
-        if (item.value == value) {
-          this.professionalList = item.children || [];
-        }
-      });
+      if (value) {
+        this.certificateTypeList.forEach(item => {
+          if (item.value == value) {
+            this.professionalList = item.children || [];
+          }
+        });
+      }
+    },
+    getProfessional1(value) {
+      if (value) {
+        this.certificateTypeList.forEach(item => {
+          if (item.value == value) {
+            this.professionalList1 = item.children || [];
+          }
+        });
+      }
     },
     //获取数据列表
     getDataList() {
@@ -513,12 +525,12 @@ export default {
         this.form.registration_status = 1;
         this.form.certificate_utility = 1;
         this.form.negotiable = false;
-        // this.form.status = "1";
-        // this.form.top = "0";
+        this.professionalList=[];
       } else {
         this.$func.setAssignData(this.form, data);
         this.form.registration_status = parseInt(data.registration_status);
         this.form.certificate_utility = parseInt(data.certificate_utility);
+        this.getProfessional(this.form.certificate_type);
       }
     },
     addEdit() {
