@@ -112,6 +112,18 @@ const asyRoute = [{
         ]
     },
     {
+        path: '/auditManage',
+        name: 'auditManage',
+        component: route.auditManage,
+        meta: {
+            parent: '',
+            name: '审核管理',
+            iconfont: 'iconfont iconshenhe5',
+            needLogin: true, //需要登录
+        },
+        children: []
+    },
+    {
         path: '/serviceManage',
         name: 'serviceManage',
         component: route.serviceManage,

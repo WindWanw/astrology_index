@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-05-12 14:09:08
+ * @LastEditTime: 2020-05-12 17:54:11
  */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
@@ -66,13 +66,18 @@ const jobs = () =>
 const building = () =>
 	import( /* webpackChunkName: "building" */ '../views/postManage/building.vue')
 
-
+/**************************系统管理**************************/
 const systemManage = () =>
 	import( /* webpackChunkName: "systemManage" */ '../views/systemManage')
 const systemSetting = () =>
 	import( /* webpackChunkName: "systemSetting" */ '../views/systemManage/systemSetting')
 const commonSetting = () =>
 	import( /* webpackChunkName: "commonSetting" */ '../views/systemManage/systemSetting/commonSetting.vue')
+
+/**************************审核管理**************************/
+const auditManage = () =>
+	import( /* webpackChunkName: "auditManage" */ '../views/auditManage')
+
 
 export default {
 	login,
@@ -100,11 +105,7 @@ export default {
 	jobs,
 	building,
 
-
-
-
-
-
+	auditManage,
 
 	systemManage,
 	systemSetting,
