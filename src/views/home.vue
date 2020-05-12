@@ -2,7 +2,10 @@
   <div class="home">
     <!-- 总计 -->
     <div class="total_wrap">
-      <div class="title">总计</div>
+      <div class="title">
+        <el-calendar v-model="calendar" first-day-of-week></el-calendar>
+      </div>
+
       <!-- <div class="total">
         <div class="item" @click="setJump()">
           <i class="iconfont yonghu3"></i>
@@ -102,8 +105,7 @@
 
         <div>
           <ve-line :data="chartData"></ve-line>
-        </div>-->
-      </div> 
+      </div>-->
     </div>
   </div>
 </template>
@@ -112,40 +114,7 @@
 export default {
   data() {
     return {
-      total: "", //总计
-      messageList: [],
-      dataList: [],
-      ptotal: "",
-      pallTotal: "",
-      percentDay: 0,
-      percentWk: 0,
-      percentPay: 0,
-      percentUnUse: 0,
-      width: 200,
-      chartData: {
-        columns: ["name", "交易额"],
-        rows: []
-      },
-      num: 7,
-      options: [
-        {
-          value: "12",
-          label: "12个月"
-        },
-        {
-          value: "6",
-          label: "6个月"
-        },
-        {
-          value: "30",
-          label: "30天"
-        },
-        {
-          value: "7",
-          label: "7天"
-        }
-      ],
-      value: ""
+      calendar: new Date()
     };
   },
   components: {},
