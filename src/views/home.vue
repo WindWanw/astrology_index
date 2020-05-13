@@ -3,7 +3,7 @@
     <!-- 总计 -->
     <div class="total_wrap">
       <div class="title">
-        <el-calendar v-model="calendar" first-day-of-week></el-calendar>
+        <el-calendar v-model="calendar" :first-day-of-week="0"></el-calendar>
       </div>
 
       <!-- <div class="total">

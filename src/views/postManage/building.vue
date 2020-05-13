@@ -174,27 +174,33 @@
                 :autosize="{ minRows: 3, maxRows: 5}"
               ></el-input>
             </el-form-item>
-            <el-form-item label="用户头像" prop="avatar">
+            <el-form-item label="上传图片" style="width:100%" prop="image">
               <el-upload
-                class="avatar-uploader"
-                :action="`${axios.defaults.baseURL}common/upload?type=avatar`"
+                :action="`${axios.defaults.baseURL}/common/upload`"
+                accept="image/jpeg, image/gif, image/png, image/bmp"
+                :before-upload="beforeUpload"
                 :show-file-list="false"
                 :on-success="uploadSuccess"
-                :before-upload="beforeUpload"
                 multiple
               >
-                <div v-if="form.avatar">
-                  <img
-                    v-for="(item,index) in form.image"
-                    :key="index"
-                    :src="item"
-                    class="avatar-upload"
-                  />
-                  <i class="el-icon-delete"></i>
-                </div>
-
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <el-button
+                  class="mini-button"
+                  size="small"
+                  type="primary"
+                  :disabled="upLoading"
+                >{{upLoading?'正在上传中...':'点击上传'}}</el-button>
               </el-upload>
+              <div class="imgPreview" v-if="form.image && form.image.length">
+                <div class="img_box" v-for="(item,index) in form.image" :key="index">
+                  <img :src="item" />
+                  <div class="model">
+                    <i class="el-icon-delete" @click="form.image.splice(index,1)" title="删除"></i>
+                  </div>
+                </div>
+              </div>
+              <div v-else>
+                <i class="el-icon-picture" style="font-size:100px;color:#ccc"></i>
+              </div>
             </el-form-item>
           </el-form>
         </div>
@@ -227,6 +233,7 @@ export default {
       isShow: false,
       isClear: false,
       openAddEditDialog: false,
+      upLoading: false,
       dataList: [],
       citys: province,
       search: {
@@ -243,7 +250,7 @@ export default {
         category: "",
         title: "",
         info: "",
-        image: [],
+        image: []
       },
       rules: {
         category: [
@@ -277,9 +284,22 @@ export default {
     },
     //上传成功后
     uploadSuccess(res, file, fileList) {
-      res.code
-        ? this.$message.error(res.data.error)
-        : this.form.image.push(res.data.img);
+      let url;
+
+      if (parseInt(res.code)) {
+        return;
+      } else {
+        if (typeof this.form.image == "string") {
+          this.form.image = [];
+        }
+
+        if (res.data.indexOf("http") !== -1) {
+          url = res.data;
+        } else {
+          url = "http://" + res.data;
+        }
+        this.form.image.push(url);
+      }
     },
 
     //返回
@@ -446,5 +466,40 @@ export default {
   width: 150px;
   height: 150px;
   display: block;
+}
+.imgPreview {
+  display: flex;
+  flex-wrap: wrap;
+}
+.imgPreview img {
+  width: 100%;
+  height: 100%;
+}
+.img_box {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 20px 10px 0;
+  border: 1px dashed #ccc;
+}
+.model {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 150px;
+  color: #fff;
+  top: 0;
+  left: 0;
+  display: none;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  text-align: center;
+}
+.img_box:hover .model {
+  display: block;
+}
+.model i {
+  cursor: pointer;
+  font-size: 20px;
 }
 </style>
