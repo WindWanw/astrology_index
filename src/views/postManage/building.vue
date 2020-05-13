@@ -355,6 +355,24 @@ export default {
           this.getDataList();
         });
     },
+    //上线操作
+    setStatus(data) {
+      let status = 1;
+      if (data.status == "1") {
+        status = 0;
+      }
+      this.$api
+        .setStatus({
+          type: "building",
+          id: data.id,
+          status: status
+        })
+        .then(res => {
+          this.$message[res.code ? "error" : "success"](res.message);
+          if (res.code) return;
+          this.getDataList();
+        });
+    },
     //打开添加dialog
     openAddEdit(type, data) {
       this.openAddEditDialog = true;
