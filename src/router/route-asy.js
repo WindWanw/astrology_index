@@ -187,6 +187,40 @@ const asyRoute = [{
                     iconfont: 'iconfont iconjianzhu1',
                     needLogin: true, //需要登录
                 },
+            },
+            {
+                path: '/tenderManage',
+                name: 'tenderManage',
+                component: route.tenderManage,
+                meta: {
+                    parent: '发布管理',
+                    name: '招投标',
+                    iconfont: 'iconfont iconzhaotoubiao1',
+                    needLogin: true, //需要登录
+                },
+                children: [{
+                        path: '/tenderAnnouncement',
+                        name: 'tenderAnnouncement',
+                        component: route.tenderAnnouncement,
+                        meta: {
+                            parent: '招投标',
+                            name: '招标公告',
+                            iconfont: 'iconfont iconzhaobiaofangan',
+                            needLogin: true, //需要登录
+                        },
+                    },
+                    {
+                        path: '/winningAnnouncement',
+                        name: 'winningAnnouncement',
+                        component: route.winningAnnouncement,
+                        meta: {
+                            parent: '招投标',
+                            name: '中标公示',
+                            iconfont: 'iconfont iconzhongbiao',
+                            needLogin: true, //需要登录
+                        },
+                    }
+                ]
             }
         ]
     },

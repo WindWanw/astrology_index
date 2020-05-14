@@ -4,7 +4,7 @@
  * @Author: ww
  * @date: 
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-05-12 17:54:11
+ * @LastEditTime: 2020-05-14 16:23:45
  */
 const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
@@ -65,6 +65,12 @@ const jobs = () =>
 	import( /* webpackChunkName: "jobs" */ '../views/postManage/jobs.vue')
 const building = () =>
 	import( /* webpackChunkName: "building" */ '../views/postManage/building.vue')
+const tenderManage = () =>
+	import( /* webpackChunkName: "tenderManage" */ '../views/postManage/tenderManage')
+const tenderAnnouncement = () =>
+	import( /* webpackChunkName: "tenderAnnouncement" */ '../views/postManage/tenderManage/tenderAnnouncement.vue')
+const winningAnnouncement = () =>
+	import( /* webpackChunkName: "winningAnnouncement" */ '../views/postManage/tenderManage/winningAnnouncement.vue')
 
 /**************************系统管理**************************/
 const systemManage = () =>
@@ -104,6 +110,9 @@ export default {
 	recruitments,
 	jobs,
 	building,
+	tenderManage,
+	tenderAnnouncement,
+	winningAnnouncement,
 
 	auditManage,
 
