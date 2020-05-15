@@ -105,14 +105,14 @@
               size="medium"
               class="iconfont iconliulan"
               @click="openAddEdit('edit',scope.row)"
-            >浏览</el-button>
-            <el-button
+            >浏览/复核</el-button>
+            <!-- <el-button
               title="复核"
               type="primary"
               size="medium"
               class="iconfont icontoreview"
               @click="openAddEdit('edit',scope.row)"
-            >复核</el-button>
+            >复核</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -131,25 +131,19 @@
       <el-dialog
         :visible.sync="openAddEditDialog"
         v-loading="loading"
-        top="30px"
-        width="60%"
+        top="50px"
+        width="50%"
         :before-close="beforeCloseDialog"
         @close="closeDialog()"
         center
       >
         <div>
-          <el-form
-            ref="form"
-            :rules="rules"
-            label-position="left"
-            label-width="120px"
-            :model="form"
-          >
+          <el-form ref="form" :rules="rules" :model="form">
             <div class="el-tender-content">
               <div class="el-tender-content-center">
                 <div class="el-tender-top">
-                  <div class="el-tender-title">[彭泽县]马当镇集镇改造工程（二标段）(网)</div>
-                  <div class="el-tender-time">[2020-05-13]</div>
+                  <div class="el-tender-title">{{form.title}}</div>
+                  <div class="el-tender-time">{{'['+form.created_at+']'}}</div>
                 </div>
                 <div class="el-tender-center">
                   <div class="el-tender-one">
@@ -157,43 +151,59 @@
                       <tr align="center">
                         <td>发布时间</td>
                         <td>
-                          <el-input></el-input>
+                          <el-input v-model="form.created_at" placeholder="请输入发布时间"></el-input>
                         </td>
                         <td>截止时间</td>
                         <td>
-                          <el-input></el-input>
+                          <el-date-picker v-model="form.over_at" type="date" placeholder="选择截止日期"></el-date-picker>
                         </td>
                       </tr>
                       <tr align="center">
-                        <td rowspan="3">张三</td>
-                        <td>语文</td>
-                        <td>98</td>
+                        <td rowspan="2">招标人</td>
+                        <td rowspan="2">
+                          <el-input v-model="form.user" placeholder="请输入招标人"></el-input>
+                        </td>
+                        <td>联系人</td>
+                        <td>
+                          <el-input v-model="form.name" placeholder="请输入联系人"></el-input>
+                        </td>
                       </tr>
                       <tr align="center">
-                        <td>数学</td>
-                        <td>100</td>
+                        <td>联系电话</td>
+                        <td>
+                          <el-input v-model="form.phone" placeholder="请输入联系电话"></el-input>
+                        </td>
                       </tr>
                       <tr align="center">
-                        <td>英语</td>
-                        <td>95</td>
+                        <td rowspan="2">招标代理机构</td>
+                        <td rowspan="2">
+                          <el-input v-model="form.proxy" placeholder="请输入招标代理机构"></el-input>
+                        </td>
+                        <td>代理机构联系人</td>
+                        <td>
+                          <el-input v-model="form.proxy_user" placeholder="请输入代理机构联系人"></el-input>
+                        </td>
                       </tr>
                       <tr align="center">
-                        <td rowspan="3">李四</td>
-                        <td>语文</td>
-                        <td>95</td>
-                      </tr>
-                      <tr align="center">
-                        <td>数学</td>
-                        <td>98</td>
-                      </tr>
-                      <tr align="center">
-                        <td>英语</td>
-                        <td>100</td>
+                        <td>代理机构联系电话</td>
+                        <td>
+                          <el-input v-model="form.proxy_phone" placeholder="请输入代理机构联系电话"></el-input>
+                        </td>
                       </tr>
                     </table>
                   </div>
-                  <div class="el-tender-two"></div>
-                  <div class="el-tender-three"></div>
+                  <div class="el-tender-two">
+                    <div class="el-tender-two-title">投标人资格要求：</div>
+                    <div class="el-tender-two-content">
+                      <textarea :row="4" v-model="form.tender_claim" placeholder="请填写投标人资格要求"></textarea>
+                    </div>
+                  </div>
+                  <div class="el-tender-three">
+                    <div class="el-tender-three-title">公告正文:</div>
+                    <div class="el-tender-three-content">
+                      <editor v-model="form.announcement" :isClear="isClear" placeholder="请填写公告正文"></editor>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -201,12 +211,11 @@
         </div>
         <span slot="footer" class="dialog-footer btn">
           <el-button
-            class="iconfont"
-            :class="form.id ? 'iconbianji' : 'iconiconfontzhizuobiaozhunbduan20'"
+            class="iconfont iconiconfontzhizuobiaozhunbduan20"
             size="mini"
-            :type="form.id ? 'primary' : 'success'"
+            type="primary"
             @click="addEdit()"
-          >{{form.id ? '修改' : '提交'}}</el-button>
+          >确 定</el-button>
           <el-button
             class="iconfont iconcancel1"
             size="mini"
@@ -219,6 +228,7 @@
   </div>
 </template>
 <script>
+import editor from "@/components/editor";
 import province from "@/config/province";
 
 export default {
@@ -271,7 +281,18 @@ export default {
         time: []
       },
       form: {
-        id: ""
+        id: "",
+        title: "[彭泽县]马当镇集镇改造工程（二标段）(网)",
+        created_at: "2020-05-13",
+        over_at: "",
+        user: "",
+        name: "",
+        phone: "",
+        proxy: "",
+        proxy_user: "",
+        proxy_phone: "",
+        tender_claim: "",
+        announcement: ""
       },
       rules: {},
       certificateTypeList: [],
@@ -282,6 +303,7 @@ export default {
       salaryList: []
     };
   },
+  components: { editor },
   watch: {},
   methods: {
     //分页
@@ -371,27 +393,6 @@ export default {
   padding: 20px;
   box-sizing: border-box;
 }
-.idcard-image {
-  display: flex;
-  justify-content: flex-start;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 150px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
-}
-
-.idcard-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 250px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
-}
 .el-tag + .el-tag {
   margin-left: 10px;
 }
@@ -411,16 +412,6 @@ export default {
   margin: 0 10px;
   padding: 5px;
 }
-.el-radio-group {
-  display: flex;
-  padding: 5px;
-}
-.el-dialog__footer {
-  text-align: left;
-}
-.el-radio-group[data-v-4687dc57] {
-  margin: 4px 0;
-}
 .el-tender-content {
   width: 100%;
   height: 100%;
@@ -429,7 +420,7 @@ export default {
 .el-tender-content-center {
   width: 90%;
   height: 100%;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   margin: 0 auto;
 }
 .el-tender-top {
@@ -456,21 +447,57 @@ export default {
 .el-tender-center {
   width: 90%;
   margin: 10px auto;
-  border: 1px solid black;
+  /* border: 1px solid red; */
 }
 .el-tender-one {
   width: 100%;
   margin: 10px;
 }
-.el-tender-one table{
-    width: 98%;
+.el-tender-one table {
+  width: 98%;
+}
+tr {
+  margin: 5px;
+  padding: 5px;
+}
+td {
+  padding: 10px;
 }
 .el-tender-two {
-  width: 100%;
-  margin: 10px;
+  width: 98%;
+  margin: 20px 10px 10px;
+  /* border: 1px solid red; */
+}
+.el-tender-two-title {
+  margin-top: 10px;
+  padding: 5px;
+  font-size: 14px;
+}
+.el-tender-two-content {
+  padding: 5px;
+}
+.el-tender-two textarea {
+  height: 100px;
 }
 .el-tender-three {
+  width: 98%;
+  margin: 20px 10px 10px;
+  /* border: 1px solid red; */
+}
+.el-tender-three-title {
+  margin-top: 10px;
+  padding: 5px;
+  font-size: 14px;
+}
+.el-tender-three-content {
+  padding: 5px;
+}
+.el-tender-three textarea {
+  height: 400px;
+}
+textarea {
   width: 100%;
-  margin: 10px;
+  padding: 10px;
+  font-size: 15px;
 }
 </style>

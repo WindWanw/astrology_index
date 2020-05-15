@@ -89,10 +89,11 @@ export default {
   methods: {
     //检测路由
     getAuthPath(name) {
-      if (window.location.href.indexOf("192.168.2.238") !== -1) {
+      let localhost = ["192.168.2.238", "localhost"];
+
+      if (localhost.indexOf(window.location.hostname) !== -1) {
         return true;
       }
-
       let router = this.$store.getters.path;
 
       for (let i in router) {
