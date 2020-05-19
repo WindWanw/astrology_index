@@ -26,7 +26,7 @@ const asyRoute = [{
             name: 'userList',
             component: route.userList,
             meta: {
-                parent: '',
+                parent: '用户管理',
                 name: '用户列表',
                 iconfont: 'iconfont iconyonghu2',
                 needLogin: true, //需要登录

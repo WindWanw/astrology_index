@@ -1,8 +1,15 @@
 <template>
   <div class="user-list">
     <div class="table_title">
-      <div></div>
-      <div class="search_wrap"></div>
+      <div>
+        <el-button
+          title="添加菜单"
+          type="success"
+          class="iconfont icontianjia"
+          size="mini"
+          @click="openJsonDialog=true"
+        >导入json</el-button>
+      </div>
     </div>
     <div class="content admin-menu">
       <div class="menu menu-list">
@@ -98,6 +105,32 @@
         </el-form>
       </div>
     </div>
+
+    <el-drawer :visible.sync="openJsonDialog" direction="rtl" @close="closeDialog()" size="50%">
+      <div class="el-json">
+        <div>
+          <el-radio-group v-model="data_type">
+            <el-radio-button label="json"></el-radio-button>
+            <el-radio-button label="array" disabled title="目前暂不支持"></el-radio-button>
+          </el-radio-group>
+        </div>
+        <div>
+          <textarea class="el-json-textarea" v-model="json" placeholder="请填写正确的json格式数据"></textarea>
+        </div>
+        <div class="el-button-json">
+          <el-button
+            class="iconfont iconiconfontzhizuobiaozhunbduan20"
+            type="primary"
+            @click="addJson()"
+          >确定</el-button>
+          <el-button
+            class="iconfont iconcancel1"
+            type="warning"
+            @click="openJsonDialog=false"
+          >取 消</el-button>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 <script>
@@ -129,11 +162,25 @@ export default {
             router: ""
           }
         ]
-      }
+      },
+      data_type: "json",
+      json: "",
+      openJsonDialog: false
     };
   },
   watch: {},
   methods: {
+    closeDialog() {
+      this.json = "";
+    },
+    addJson(){
+
+      let data=this.json;
+
+      this.$api.getJsonMenu({json:data}).then(res=>{
+        
+      })
+    },
     handleNodeClick(data) {
       for (let i in this.form) {
         if (
@@ -302,5 +349,22 @@ export default {
 .action span {
   display: flex;
   flex-direction: row;
+}
+.el-json {
+  width: 100%;
+  height: 100%;
+  padding: 0 20px;
+}
+.el-json-textarea {
+  width: 98%;
+  height: 500px;
+  padding: 10px;
+  color: red;
+  font-size: 14px;
+}
+.el-button-json{
+  margin: 10px auto;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

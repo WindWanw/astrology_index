@@ -153,4 +153,7 @@ export default {
     getMenuAction(params) {
         return fetchGet('authority/get/menu/action', params);
     },
+    getJsonMenu(params) {
+        return fetchPost('authority/get/json/menu', params);
+    }
 }
