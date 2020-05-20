@@ -49,7 +49,7 @@ const asyRoute = [{
                 component: route.adminUser,
                 meta: {
                     parent: '权限管理',
-                    name: '用户管理',
+                    name: '后台用户',
                     iconfont: 'iconfont iconquanxianshenyue',
                     needLogin: true, //需要登录
                 },
@@ -239,7 +239,7 @@ const asyRoute = [{
             name: 'systemSetting',
             component: route.systemSetting,
             meta: {
-                parent: '',
+                parent: '系统管理',
                 name: '系统设置',
                 iconfont: 'iconfont iconicon-test',
                 needLogin: true, //需要登录
@@ -249,7 +249,7 @@ const asyRoute = [{
                 name: 'commonSetting',
                 component: route.commonSetting,
                 meta: {
-                    parent: '',
+                    parent: '系统设置',
                     name: '常用设置',
                     iconfont: 'iconfont iconicon-test',
                     needLogin: true, //需要登录

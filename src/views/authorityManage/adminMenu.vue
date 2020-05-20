@@ -8,7 +8,7 @@
           class="iconfont icontianjia"
           size="mini"
           @click="openJsonDialog=true"
-        >导入json</el-button>
+        >导入route-asy.js</el-button>
       </div>
     </div>
     <div class="content admin-menu">
@@ -110,24 +110,35 @@
       <div class="el-json">
         <div>
           <el-radio-group v-model="data_type">
-            <el-radio-button label="json"></el-radio-button>
+            <el-radio-button label="js"></el-radio-button>
             <el-radio-button label="array" disabled title="目前暂不支持"></el-radio-button>
           </el-radio-group>
         </div>
         <div>
-          <textarea class="el-json-textarea" v-model="json" placeholder="请填写正确的json格式数据"></textarea>
+          <textarea class="el-json-textarea" v-model="json" placeholder="请填写正确的route-asy.js格式数据"></textarea>
         </div>
         <div class="el-button-json">
+          <el-upload
+            :action="`${axios.defaults.baseURL}common/get/menu/js`"
+            :before-upload="beforeUpload"
+            :show-file-list="false"
+            :on-success="uploadSuccess"
+          >
+            <el-button
+              class="iconfont"
+              :class="upLoading ? 'icondengdai' : 'iconicon_huabanfuben1'"
+              title="点击上传js文件"
+              size="small"
+              type="success"
+              :disabled="upLoading"
+            >{{upLoading?'正在上传中...':'点击上传'}}</el-button>
+          </el-upload>
           <el-button
             class="iconfont iconiconfontzhizuobiaozhunbduan20"
             type="primary"
             @click="addJson()"
           >确定</el-button>
-          <el-button
-            class="iconfont iconcancel1"
-            type="warning"
-            @click="openJsonDialog=false"
-          >取 消</el-button>
+          <el-button class="iconfont iconcancel1" type="warning" @click="openJsonDialog=false">取 消</el-button>
         </div>
       </div>
     </el-drawer>
@@ -163,23 +174,39 @@ export default {
           }
         ]
       },
-      data_type: "json",
+      data_type: "js",
       json: "",
-      openJsonDialog: false
+      openJsonDialog: false,
+      upLoading: false
     };
   },
   watch: {},
   methods: {
+    //上传图片前
+    beforeUpload(file) {
+      this.upLoading = true;
+      if (file.name.indexOf(".js") === -1) {
+        this.upLoading = false;
+        return this.$message.warning("请上传正确的router-asy.js文件！");
+      }
+    },
+    //上传成功后
+    uploadSuccess(res, file, fileList) {
+      this.json = res.data;
+      this.upLoading = false;
+    },
     closeDialog() {
       this.json = "";
     },
-    addJson(){
+    addJson() {
+      let data = this.json;
 
-      let data=this.json;
-
-      this.$api.getJsonMenu({json:data}).then(res=>{
-        
-      })
+      this.$api.getJsonMenu({ json: data }).then(res => {
+        this.$message[res.code ? "error" : "success"](res.message);
+        if (res.code) return;
+        this.openJsonDialog = false;
+        this.getDataList();
+      });
     },
     handleNodeClick(data) {
       for (let i in this.form) {
@@ -362,7 +389,7 @@ export default {
   color: red;
   font-size: 14px;
 }
-.el-button-json{
+.el-button-json {
   margin: 10px auto;
   display: flex;
   justify-content: flex-end;

@@ -153,7 +153,8 @@ export default {
     getMenuAction(params) {
         return fetchGet('authority/get/menu/action', params);
     },
+    //生成菜单
     getJsonMenu(params) {
         return fetchPost('authority/get/json/menu', params);
-    }
+    },
 }
