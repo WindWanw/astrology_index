@@ -13,7 +13,7 @@ import {
 
 export default {
     login(params) {
-        return fetchPost('user/login', params);
+        return fetchPost('login/login', params);
     },
     getUserInfo(params) {
         return fetchGet('user/info', params);
@@ -157,4 +157,8 @@ export default {
     getJsonMenu(params) {
         return fetchPost('authority/get/json/menu', params);
     },
+    //招工招班组
+    getProjectList(params) {
+        return fetchGet('post/get/project/list', params);
+    }
 }

@@ -63,6 +63,9 @@ const recruitments = () =>
 //人才求职
 const jobs = () =>
 	import( /* webpackChunkName: "jobs" */ '../views/postManage/jobs.vue')
+//项目招工/招班组
+const project = () =>
+	import( /* webpackChunkName: "project" */ '../views/postManage/project.vue')
 const building = () =>
 	import( /* webpackChunkName: "building" */ '../views/postManage/building.vue')
 const tenderManage = () =>
@@ -109,6 +112,7 @@ export default {
 	postManage,
 	recruitments,
 	jobs,
+	project,
 	building,
 	tenderManage,
 	tenderAnnouncement,
