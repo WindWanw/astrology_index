@@ -2,6 +2,14 @@ module.exports = {
     publicPath: "./",
     devServer: {
         proxy: {
+            "/dev": {
+                target: "http://www.ast.gold.com/",
+                changeOrigin: true,
+                ws: true,
+                pathRewrite: {
+                    '^/dev': ''
+                }
+            },
             "/api": {
                 target: "http://www.ast.gold/",
                 changeOrigin: true,

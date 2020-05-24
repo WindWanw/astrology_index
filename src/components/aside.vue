@@ -89,7 +89,7 @@ export default {
   methods: {
     //检测路由
     getAuthPath(name) {
-      let localhost = ["192.168.2.238", "localhost"];
+      let localhost = ["192.168.2.100", "localhost"];
 
       if (localhost.indexOf(window.location.hostname) !== -1) {
         return true;

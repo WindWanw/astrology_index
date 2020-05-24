@@ -37,12 +37,8 @@ export default {
     //获取用户相关信息，将该信息保存在vue状态管理中
     getUserInfo() {
       this.$api.getUserInfo().then(res => {
-        if (res.code) {
-          this.$message.error(res.message);
-          this.$router.replace("/login");
-          localStorage.clear("token");
-        } else {
-          this.$store.commit("ADD_USER_INFO", res.data);
+        if (!res.code) {
+          this.$store.commit("ADD_USER_INFO", res.data.list);
           this.$store.commit("GET_AUTH_PATH",res.data.path)
         }
       });

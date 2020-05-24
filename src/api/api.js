@@ -16,7 +16,7 @@ export default {
         return fetchPost('login/login', params);
     },
     getUserInfo(params) {
-        return fetchGet('user/info', params);
+        return fetchGet('auth/home/getUserInfo', params);
     },
 
     //公共接口

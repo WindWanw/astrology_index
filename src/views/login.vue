@@ -7,7 +7,7 @@
     </div>
     <div class="login-content">
       <div class="login_title">
-        <span>广盈管理系统</span>
+        <span>Astrology管理系统</span>
       </div>
       <div>
         <el-input
