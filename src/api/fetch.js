@@ -33,7 +33,8 @@ if (h.indexOf('localhost') !== -1 || h.indexOf('192.168.0.104') !== -1) {
 //请求拦截器(在发送请求之前做些什么)
 axios.interceptors.request.use(request => {
 	let token = localStorage.getItem('token'); //从缓存中获取用户令牌token
-	request.headers['API-KEY'] = 'astrology';
+	request.headers['Accept-key'] = 'astrology';
+	request.headers['Accept-From'] = 'admin';
 
 	//如果存在token
 	if (token) {

@@ -13,11 +13,11 @@
         <el-input
           size="small"
           placeholder="请输入账号"
-          prefix-icon="iconfont icongeren"
+          prefix-icon="iconfont iconziyuan1"
           v-model="form.username"
         ></el-input>
         <el-input
-          prefix-icon="iconfont iconxiugaimima1"
+          prefix-icon="iconfont iconziyuan"
           placeholder="请输入密码"
           v-model="form.password"
           size="small"
@@ -125,7 +125,7 @@ export default {
   background-color: #409eff;
   height: 50px;
 }
-.iconfont.icongeren.iconxiugaimima1 {
+.iconfont.iconziyuan1.iconziyuan {
     margin: 5px;
 }
 </style>

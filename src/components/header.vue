@@ -2,7 +2,7 @@
   <div class="header theme-bg-blue">
     <div class="left">
       <el-dropdown trigger="click" :hide-on-click="false">
-        <div class="logo">广盈集团</div>
+        <div class="logo">Astrology | 占星</div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item icon="iconfont iconcaidan">
             <el-tooltip content="点击切换menu栏" placement="top">
@@ -21,26 +21,26 @@
         </el-dropdown-menu>
       </el-dropdown>
 
-      <i class="iconfont iconcaidan" title="收起/展开" @click="$emit('changeCollapse')"></i>
+      <i class="iconfont iconcaidan1" title="收起/展开" @click="$emit('changeCollapse')"></i>
     </div>
 
     <div class="right">
       <theme-picker></theme-picker>
-      <i class="iconfont icongeren"></i>
+      <i class="iconfont icondashujukeshihuaico-"></i>
       <span class="username">{{userInfo.username}}</span>
       <el-dropdown>
         <span class="el-dropdown-link">
-          <i class="iconfont iconqiehuanzuhu"></i>
+          <i class="iconfont iconxiala"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
             <span @click="openEditPassword">
-              <i class="iconfont iconxiugaimima"></i>修改密码
+              <i class="iconfont iconziyuanxhdpi"></i>修改密码
             </span>
           </el-dropdown-item>
           <el-dropdown-item>
             <span @click="loginout">
-              <i class="iconfont icontuichu3"></i>退出登录
+              <i class="iconfont icontuichu1"></i>退出登录
             </span>
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -54,7 +54,6 @@ import ThemePicker from "@/components/themePicker";
 export default {
   data() {
     return {
-      // username: JSON.parse(localStorage.getItem("userinfo")).username || "",
       menuType: this.$store.state.menuType
     };
   },
@@ -108,7 +107,7 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
-.iconfont.iconcaidan {
+.iconfont.iconcaidan1 {
   font-size: 25px;
   font-weight: 600;
   color: #fff;
@@ -119,13 +118,13 @@ export default {
   font-size: 28px;
   color: #fff;
 }
-.iconfont.icongeren {
+.iconfont.icondashujukeshihuaico- {
   margin-left: 10px;
 }
 .right .username {
   margin: 0 10px;
 }
-.iconfont.iconqiehuanzuhu {
+.iconfont.iconxiala {
   font-size: 20px;
   cursor: pointer;
   color: #fff;

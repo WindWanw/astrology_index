@@ -6,270 +6,79 @@ const asyRoute = [{
         meta: {
             parent: '',
             name: '首页',
-            iconfont: 'iconfont iconhome_icon',
+            iconfont: 'iconfont iconshouye',
             needLogin: true, //需要登录
         },
         children: []
     },
     {
-        path: '/userManage',
-        name: 'userManage',
-        component: route.userManage,
+        path: '/admin',
+        name: 'admin',
+        component: route.admin,
         meta: {
             parent: '',
-            name: '用户管理',
-            iconfont: 'iconfont iconyonghu2',
+            name: '后台管理',
+            iconfont: 'iconfont iconhuaban1',
             needLogin: true, //需要登录
         },
         children: [{
-            path: '/userList',
-            name: 'userList',
-            component: route.userList,
+            path: '/about',
+            name: 'about',
+            component: route.about,
             meta: {
-                parent: '用户管理',
-                name: '用户列表',
-                iconfont: 'iconfont iconyonghu2',
-                needLogin: true, //需要登录
-            },
-        }]
-    },
-    {
-        path: '/authorityManage',
-        name: 'authorityManage',
-        component: route.authorityManage,
-        meta: {
-            parent: '',
-            name: '权限管理',
-            iconfont: 'iconfont iconquanxianshezhi',
-            needLogin: true, //需要登录
-        },
-        children: [{
-                path: '/adminUser',
-                name: 'adminUser',
-                component: route.adminUser,
-                meta: {
-                    parent: '权限管理',
-                    name: '后台用户',
-                    iconfont: 'iconfont iconquanxianshenyue',
-                    needLogin: true, //需要登录
-                },
-            },
-            {
-                path: '/adminRole',
-                name: 'adminRole',
-                component: route.adminRole,
-                meta: {
-                    parent: '权限管理',
-                    name: '角色管理',
-                    iconfont: 'iconfont iconquanxian1',
-                    needLogin: true, //需要登录
-                },
-            }, {
-                path: '/adminMenu',
-                name: 'adminMenu',
-                component: route.adminMenu,
-                meta: {
-                    parent: '权限管理',
-                    name: '菜单管理',
-                    iconfont: 'iconfont iconcaidan1',
-                    needLogin: true, //需要登录
-                },
-            },
-        ]
-    },
-    {
-        path: '/checkManage',
-        name: 'checkManage',
-        component: route.checkManage,
-        meta: {
-            parent: '',
-            name: '认证管理',
-            iconfont: 'iconfont iconrenzheng',
-            needLogin: true, //需要登录
-        },
-        children: [{
-                path: '/enterpriseAuth',
-                name: 'enterpriseAuth',
-                component: route.enterpriseAuth,
-                meta: {
-                    parent: '认证管理',
-                    name: '企业认证',
-                    iconfont: 'iconfont iconqiyejianjie',
-                    needLogin: true, //需要登录
-                },
-            },
-            {
-                path: '/userAuth',
-                name: 'userAuth',
-                component: route.userAuth,
-                meta: {
-                    parent: '认证管理',
-                    name: '个人认证',
-                    iconfont: 'iconfont icongeren9',
-                    needLogin: true, //需要登录
-                },
-            }
-        ]
-    },
-    {
-        path: '/auditManage',
-        name: 'auditManage',
-        component: route.auditManage,
-        meta: {
-            parent: '',
-            name: '审核管理',
-            iconfont: 'iconfont iconshenhe5',
-            needLogin: true, //需要登录
-        },
-        children: []
-    },
-    {
-        path: '/serviceManage',
-        name: 'serviceManage',
-        component: route.serviceManage,
-        meta: {
-            parent: '',
-            name: '服务管理',
-            iconfont: 'iconfont iconfuwu1',
-            needLogin: true, //需要登录
-        },
-        children: [{
-            path: '/education',
-            name: 'education',
-            component: route.education,
-            meta: {
-                parent: '服务管理',
-                name: '学历提升',
-                iconfont: 'iconfont iconxueli',
-                needLogin: true, //需要登录
-            },
-        }]
-    },
-    {
-        path: '/postManage',
-        name: 'postManage',
-        component: route.postManage,
-        meta: {
-            parent: '',
-            name: '发布管理',
-            iconfont: 'iconfont iconfabu-',
-            needLogin: true, //需要登录
-        },
-        children: [{
-                path: '/recruitments',
-                name: 'recruitments',
-                component: route.recruitments,
-                meta: {
-                    parent: '发布管理',
-                    name: '人才招聘',
-                    iconfont: 'iconfont iconzhaopin',
-                    needLogin: true, //需要登录
-                },
-            },
-            {
-                path: '/jobs',
-                name: 'jobs',
-                component: route.jobs,
-                meta: {
-                    parent: '发布管理',
-                    name: '人才求职',
-                    iconfont: 'iconfont iconqiuzhizhuangtai',
-                    needLogin: true, //需要登录
-                },
-            }, 
-            {
-                path: '/project',
-                name: 'project',
-                component: route.project,
-                meta: {
-                    parent: '发布管理',
-                    name: '招工/班组',
-                    iconfont: 'iconfont icongongren',
-                    needLogin: true, //需要登录
-                },
-            },
-            {
-                path: '/building',
-                name: 'building',
-                component: route.building,
-                meta: {
-                    parent: '发布管理',
-                    name: '建筑圈',
-                    iconfont: 'iconfont iconjianzhu1',
-                    needLogin: true, //需要登录
-                },
-            },
-            {
-                path: '/tenderManage',
-                name: 'tenderManage',
-                component: route.tenderManage,
-                meta: {
-                    parent: '发布管理',
-                    name: '招投标',
-                    iconfont: 'iconfont iconzhaotoubiao1',
-                    needLogin: true, //需要登录
-                },
-                children: [{
-                        path: '/tenderAnnouncement',
-                        name: 'tenderAnnouncement',
-                        component: route.tenderAnnouncement,
-                        meta: {
-                            parent: '招投标',
-                            name: '招标公告',
-                            iconfont: 'iconfont iconzhaobiaofangan',
-                            needLogin: true, //需要登录
-                        },
-                    },
-                    {
-                        path: '/winningAnnouncement',
-                        name: 'winningAnnouncement',
-                        component: route.winningAnnouncement,
-                        meta: {
-                            parent: '招投标',
-                            name: '中标公示',
-                            iconfont: 'iconfont iconzhongbiao',
-                            needLogin: true, //需要登录
-                        },
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        path: '/systemManage',
-        name: 'systemManage',
-        component: route.systemManage,
-        meta: {
-            parent: '',
-            name: '系统管理',
-            iconfont: 'iconfont iconicon-test',
-            needLogin: true, //需要登录
-        },
-        children: [{
-            path: '/systemSetting',
-            name: 'systemSetting',
-            component: route.systemSetting,
-            meta: {
-                parent: '系统管理',
-                name: '系统设置',
-                iconfont: 'iconfont iconicon-test',
+                parent: '后台管理',
+                name: '关于我们',
+                iconfont: 'iconfont iconnb-',
                 needLogin: true, //需要登录
             },
             children: [{
-                path: '/commonSetting',
-                name: 'commonSetting',
-                component: route.commonSetting,
+                path: '/description',
+                name: 'description',
+                component: route.description,
                 meta: {
-                    parent: '系统设置',
-                    name: '常用设置',
-                    iconfont: 'iconfont iconicon-test',
+                    parent: '关于我们',
+                    name: '相关描述',
+                    iconfont: 'iconfont icon-wenbenmiaoshu',
                     needLogin: true, //需要登录
                 },
                 children: []
-            }]
-        }],
-    }
-
+            }, ]
+        }, ]
+    },
+    {
+        path: '/index',
+        name: 'index',
+        component: route.index,
+        meta: {
+            parent: '',
+            name: '前台管理',
+            iconfont: 'iconfont iconqiantaicaidan',
+            needLogin: true, //需要登录
+        },
+        children: [{
+            path: '/abouts',
+            name: 'abouts',
+            component: route.abouts,
+            meta: {
+                parent: '前台管理',
+                name: '关于我们',
+                iconfont: 'iconfont iconhome_icon',
+                needLogin: true, //需要登录
+            },
+            children: [{
+                path: '/descriptions',
+                name: 'descriptions',
+                component: route.descriptions,
+                meta: {
+                    parent: '关于我们',
+                    name: '相关描述',
+                    iconfont: 'iconfont iconhome_icon',
+                    needLogin: true, //需要登录
+                },
+                children: []
+            }, ]
+        }, ]
+    },
 ];
 
 
