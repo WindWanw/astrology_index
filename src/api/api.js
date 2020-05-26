@@ -11,12 +11,15 @@ import {
     fetchGet
 } from './fetch';
 
-export default {
+export default { 
     login(params) {
-        return fetchPost('login/login', params);
+        return fetchPost('login', params);
     },
     getUserInfo(params) {
         return fetchGet('auth/home/getUserInfo', params);
+    },
+    uploadFile(params) {
+        return fetchPost('common/uploadFile', params);
     },
 
     //关于

@@ -75,7 +75,7 @@
       ></el-pagination>
 
       <el-dialog
-        title="修改博客文章"
+        :title="form.id ? '修改' : '添加'"
         :visible.sync="openAddEditDialog"
         v-loading="loading"
         top="30px"
@@ -85,18 +85,18 @@
       >
         <div>
           <el-form label-position="right" label-width="120px" :model="form">
-            <el-form-item label="文章标题" prop="title">
+            <el-form-item label="标题" prop="title">
               <el-input
                 v-model="form.title"
                 size="mini"
-                placeholder="请填写博客文章标题"
+                placeholder="请填写标题"
                 suffix-icon="iconfont iconyonghu3"
               ></el-input>
             </el-form-item>
-            <el-form-item label="文章封面" prop="image">
+            <el-form-item label="封面图" prop="image">
               <el-upload
                 class="avatar-uploader"
-                :action="`${axios.defaults.baseURL}/upload/uploadFile/upload/upload_article_image`"
+                :action="`${axios.defaults.baseURL}common/uploadFile/open/true`"
                 :show-file-list="false"
                 :on-success="uploadSuccess"
                 :before-upload="beforeUpload"
@@ -105,7 +105,7 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
-            <el-form-item label="文章内容" prop="content">
+            <el-form-item label="内容" prop="content">
               <editor v-model="form.content" :isClear="isClear"></editor>
             </el-form-item>
             <el-form-item label="上线状态" prop="status">
