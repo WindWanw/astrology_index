@@ -22,5 +22,24 @@ export default {
     //关于
     getAboutList(params) {
         return fetchGet('auth/about/getAboutList', params);
-    }
+    },
+
+    //系统设置
+
+    //admin
+    getWordsList(params) {
+        return fetchGet('auth/system/getWordsList', params);
+    },
+    addWords(params) {
+        return fetchPost('auth/system/addWords', params);
+    },
+    editWords(params) {
+        return fetchPost('auth/system/editWords', params);
+    },
+    delWords(params) {
+        return fetchGet('auth/system/delWords', params);
+    },
+
+
+    //index
 }

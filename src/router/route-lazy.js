@@ -32,6 +32,17 @@ const abouts = () =>
 	import( /* webpackChunkName: "about" */ '../views/index/abouts')
 const descriptions = () =>
 	import( /* webpackChunkName: "description" */ '../views/index/abouts/descriptions.vue')
+
+/**************************系统设置**************************/
+const system = () =>
+	import( /* webpackChunkName: "system" */ '../views/system')
+const adminSystem = () =>
+	import( /* webpackChunkName: "adminSystem" */ '../views/system/adminSystem')
+const wordsList = () =>
+	import( /* webpackChunkName: "wordsList" */ '../views/system/adminSystem/wordsList.vue')
+
+const indexSystem = () =>
+	import( /* webpackChunkName: "indexSystem" */ '../views/system/index')
 export default {
 	login,
 	notFound,
@@ -45,4 +56,9 @@ export default {
 	index,
 	abouts,
 	descriptions,
+
+	system,
+	adminSystem,
+	wordsList,
+	indexSystem
 }

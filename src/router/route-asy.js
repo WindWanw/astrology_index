@@ -79,6 +79,53 @@ const asyRoute = [{
             }, ]
         }, ]
     },
+    {
+        path: '/system',
+        name: 'system',
+        component: route.system,
+        meta: {
+            parent: '',
+            name: '系统设置',
+            iconfont: 'iconfont iconicon-',
+            needLogin: true, //需要登录
+        },
+        children: [{
+                path: '/adminSystem',
+                name: 'adminSystem',
+                component: route.adminSystem,
+                meta: {
+                    parent: '系统设置',
+                    name: '后台设置',
+                    iconfont: 'iconfont iconhuaban1',
+                    needLogin: true, //需要登录
+                },
+                children: [{
+                    path: '/wordsList',
+                    name: 'wordsList',
+                    component: route.wordsList,
+                    meta: {
+                        parent: '后台设置',
+                        name: '名单管理',
+                        iconfont: 'iconfont iconhoutai',
+                        needLogin: true, //需要登录
+                    },
+                    children: []
+                }, ]
+            },
+            {
+                path: '/indexSystem',
+                name: 'indexSystem',
+                component: route.indexSystem,
+                meta: {
+                    parent: '系统设置',
+                    name: '前台设置',
+                    iconfont: 'iconfont iconqiantaicaidan',
+                    needLogin: true, //需要登录
+                },
+                children: []
+            },
+        ]
+    },
 ];
 
 
