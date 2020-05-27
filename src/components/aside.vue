@@ -89,11 +89,13 @@ export default {
   methods: {
     //检测路由
     getAuthPath(name) {
-      let localhost = ["192.168.2.100", "localhost"];
 
-      if (localhost.indexOf(window.location.hostname) !== -1) {
-        return true;
-      }
+      return true;
+      // let localhost = ["192.168.2.100", "localhost","astrology.gold"];
+
+      // if (localhost.indexOf(window.location.hostname) !== -1) {
+      //   return true;
+      // }
       let router = this.$store.getters.path;
 
       for (let i in router) {
