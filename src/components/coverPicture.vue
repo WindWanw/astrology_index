@@ -1,6 +1,6 @@
 <template>
   <div class="cover-picture">
-    <img :src="url" :style="style" @click="view()" />
+    <img :src="url" :style="styles" @click="view()" />
   </div>
 </template>
 
@@ -12,17 +12,21 @@ export default {
   },
   props: {
     url: {
-      type: string,
+      type: String,
       default: "",
       reuqire: true
     },
-    style: {
-      type: object,
-      default: "{width:'60px',height:'60px'}"
+    styles: {
+      type: Object,
+      default: () => {
+        return { width: "60px", height: "60px" };
+      }
     }
   },
   methods: {
-    view() {}
+    view() {
+      
+    }
   }
 };
 </script>

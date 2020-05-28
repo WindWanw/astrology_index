@@ -46,8 +46,18 @@
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
         <el-table-column prop="image" label="封面图" align="center">
           <template slot-scope="scope">
-            <!-- <img class="el-upload-image" :src="scope.row.image" /> -->
-            <cover :url="scope.row.image" :style="{width:'100px',height:'100px'}"></cover>
+            <!-- <cover :url="scope.row.image"></cover> -->
+            <!-- <avatar :url="scope.row.image" :sizes="70" :fits="'fill'" @click.native="view(scope.row.image)"></avatar> -->
+            <div @click="view(scope.row.image)">
+              <avatar
+                :url="scope.row.image"
+                :fits="'fill'"
+                :types="2"
+                ref="avatar"
+                :isDialog="isDialog"
+                @close="close"
+              ></avatar>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" align="center"></el-table-column>
@@ -143,16 +153,15 @@
 <script>
 import Editor from "@/components/editor.vue";
 import Cover from "@/components/coverPicture.vue";
+import Avatar from "@/components/avatar.vue";
 export default {
-  components: { Editor, Cover },
+  components: { Editor, Cover, Avatar },
   data() {
     return {
       loading: false,
       isShow: false,
       isClear: false,
       dataList: [],
-      articleType: [],
-      modalityType: [],
       search: {
         page: 1,
         limit: 10
@@ -164,11 +173,19 @@ export default {
         content: "", //简介
         status: "1" //状态
       },
-      openAddEditDialog: false
+      openAddEditDialog: false,
+      isDialog: false
     };
   },
   watch: {},
   methods: {
+    view(url) {
+      this.isDialog = true;
+      this.$refs.avatar.view(url);
+    },
+    close(params) {
+      this.isDialog = params;
+    },
     //分页
     handleSizeChange(val) {
       this.search.limit = val;
