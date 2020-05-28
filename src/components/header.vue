@@ -38,7 +38,7 @@
               <i class="iconfont iconziyuanxhdpi"></i>修改密码
             </span>
           </el-dropdown-item>
-          <el-dropdown-item>
+          <el-dropdown-item @click="loginout">
             <span @click="loginout">
               <i class="iconfont icontuichu1"></i>退出登录
             </span>

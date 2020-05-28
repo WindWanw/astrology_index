@@ -11,7 +11,7 @@ import {
     fetchGet
 } from './fetch';
 
-export default { 
+export default {
     login(params) {
         return fetchPost('login', params);
     },
@@ -25,6 +25,12 @@ export default {
     //关于
     getAboutList(params) {
         return fetchGet('auth/about/getAboutList', params);
+    },
+    addAbout(params) {
+        return fetchPost('auth/about/addAboutInfo', params);
+    },
+    editAbout(params) {
+        return fetchPost('auth/about/editAboutInfo', params);
     },
 
     //系统设置

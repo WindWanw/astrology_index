@@ -44,11 +44,22 @@
         class="user-table"
       >
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
-        <el-table-column prop="image" label="封面图" align="center"></el-table-column>
+        <el-table-column prop="image" label="封面图" align="center">
+          <template slot-scope="scope">
+            <!-- <img class="el-upload-image" :src="scope.row.image" /> -->
+            <cover :url="scope.row.image" :style="{width:'100px',height:'100px'}"></cover>
+          </template>
+        </el-table-column>
         <el-table-column prop="title" label="标题" align="center"></el-table-column>
-        <el-table-column prop="content" label="内容" align="center"></el-table-column>
         <el-table-column prop="user" label="添加者" align="center">
           <template slot-scope="scope">{{scope.row.user.nickname}}</template>
+        </el-table-column>
+        <el-table-column prop="status" label="状态" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.status ? 'success' : 'error'"
+            >{{scope.row.status | getStatus()}}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column prop="create_time" label="添加时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
@@ -86,12 +97,7 @@
         <div>
           <el-form label-position="right" label-width="120px" :model="form">
             <el-form-item label="标题" prop="title">
-              <el-input
-                v-model="form.title"
-                size="mini"
-                placeholder="请填写标题"
-                suffix-icon="iconfont iconyonghu3"
-              ></el-input>
+              <el-input v-model="form.title" size="mini" placeholder="请填写标题"></el-input>
             </el-form-item>
             <el-form-item label="封面图" prop="image">
               <el-upload
@@ -126,7 +132,7 @@
             class="iconfont iconqueding3"
             size="mini"
             type="success"
-            @click="editArticle('3')"
+            @click="addEdit()"
           >确定修改</el-button>
           <el-button class="iconfont iconquxiao" size="mini" @click="openAddEditDialog = false">取 消</el-button>
         </span>
@@ -136,8 +142,9 @@
 </template>
 <script>
 import Editor from "@/components/editor.vue";
+import Cover from "@/components/coverPicture.vue";
 export default {
-  components: { Editor },
+  components: { Editor, Cover },
   data() {
     return {
       loading: false,
@@ -225,6 +232,21 @@ export default {
       } else {
         this.$func.setAssignData(this.form, item);
       }
+    },
+
+    //添加修改
+    addEdit() {
+      this.loading = true;
+
+      this.$api[this.form.id ? "editAbout" : "addAbout"](this.form).then(
+        res => {
+          this.$message[res.code ? "error" : "success"](res.data.message);
+          if (res.code) return;
+          this.openAddEditDialog = false;
+          this.getDataList();
+        }
+      );
+      this.loading = false;
     }
   },
   created() {
@@ -238,27 +260,6 @@ export default {
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
-}
-.idcard-image {
-  display: flex;
-  justify-content: flex-start;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 150px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
-}
-
-.idcard-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 250px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
 }
 .el-tag + .el-tag {
   margin-left: 10px;
@@ -277,5 +278,9 @@ export default {
 }
 .el-button {
   margin: 0 10px;
+}
+.el-upload-image {
+  width: 60px;
+  height: 60px;
 }
 </style>

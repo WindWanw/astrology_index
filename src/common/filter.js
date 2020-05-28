@@ -9,6 +9,9 @@
 //获取性别
 const getSexStatus = (status) => status == '0' ? '女' : '男';
 
+//状态
+const getStatus = (status) => status == 0 ? '禁用' : '启用';
+
 //标签、按钮颜色
 const getColor = color => {
     switch (String(color)) {
@@ -63,6 +66,7 @@ const getTagColor = t => {
 
 export default {
     getSexStatus,
+    getStatus,
     getColor,
     getTagColor
 }
