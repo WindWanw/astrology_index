@@ -278,6 +278,14 @@ export default {
   padding: 20px;
   box-sizing: border-box;
 }
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 150px;
+  height: 150px;
+  line-height: 150px;
+  text-align: center;
+}
 .el-tag + .el-tag {
   margin-left: 10px;
 }
