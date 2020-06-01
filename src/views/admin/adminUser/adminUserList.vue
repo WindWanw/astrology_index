@@ -43,14 +43,42 @@
         v-loading="loading"
         class="user-table"
       >
+        <!-- <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="姓名:">
+                <span>{{ props.row.profile.name }}</span>
+              </el-form-item>
+              <el-form-item label="性别:">
+                <span>{{ props.row.profile.sex | getSexStatus}}</span>
+              </el-form-item>
+              <el-form-item label="出生年月日:">
+                <span>{{ props.row.profile.birthday }}</span>
+              </el-form-item>
+              <el-form-item label="地址:">
+                <span>{{ props.row.profile.address }}</span>
+              </el-form-item>
+              <el-form-item label="邮箱:">
+                <span>{{ props.row.profile.email }}</span>
+              </el-form-item>
+              <el-form-item label="联系方式:">
+                <span>{{ props.row.profile.phone }}</span>
+              </el-form-item>
+              <el-form-item label="身份:">
+                <span>{{ props.row.profile.identity }}</span>
+              </el-form-item>
+              <el-form-item label="描述:">
+                <span>{{ props.row.profile.self_description }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>-->
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
-        <el-table-column prop="image" label="封面图" align="center">
+        <el-table-column prop="image" label="头像" align="center">
           <template slot-scope="scope">
-            <!-- <cover :url="scope.row.image"></cover> -->
-            <!-- <avatar :url="scope.row.image" :sizes="70" :fits="'fill'" @click.native="view(scope.row.image)"></avatar> -->
-            <div @click="view(scope.row.image)">
+            <div @click="view(scope.row.avatar)">
               <avatar
-                :url="scope.row.image"
+                :url="scope.row.avatar"
                 :fits="'fill'"
                 :types="2"
                 ref="avatar"
@@ -60,10 +88,8 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="标题" align="center"></el-table-column>
-        <el-table-column prop="user" label="添加者" align="center">
-          <template slot-scope="scope">{{scope.row.user.nickname}}</template>
-        </el-table-column>
+        <el-table-column prop="username" label="账号" align="center"></el-table-column>
+        <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
         <el-table-column prop="status" label="状态" align="center">
           <template slot-scope="scope">
             <el-tag
@@ -71,7 +97,7 @@
             >{{scope.row.status | getStatus()}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="create_time" label="添加时间" align="center"></el-table-column>
+        <el-table-column prop="create_time" label="注册时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
@@ -106,23 +132,37 @@
       >
         <div>
           <el-form label-position="right" label-width="120px" :model="form">
-            <el-form-item label="标题" prop="title">
-              <el-input v-model="form.title" size="mini" placeholder="请填写标题"></el-input>
+            <el-form-item label="账号" prop="title">
+              <el-input
+                v-model="form.username"
+                size="mini"
+                placeholder="请填写账号"
+                :readonly="form.id ? true : false"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="封面图" prop="image">
+            <el-form-item label="密码" prop="pwd">
+              <el-input
+                v-model="form.pwd"
+                size="mini"
+                show-password
+                placeholder="请填写密码"
+                :readonly="form.id ? true : false"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="昵称" prop="nickname">
+              <el-input v-model="form.nickname" size="mini" placeholder="请设置昵称"></el-input>
+            </el-form-item>
+            <el-form-item label="头像" prop="avatar">
               <el-upload
                 class="avatar-uploader"
-                :action="`${axios.defaults.baseURL}common/uploadFile/open/true`"
+                :action="`${axios.defaults.baseURL}common/uploadFile/open/true/upload/upload_avatar`"
                 :show-file-list="false"
                 :on-success="uploadSuccess"
                 :before-upload="beforeUpload"
               >
-                <img v-if="form.image" :src="form.image" class="avatar-upload" />
+                <img v-if="form.avatar" :src="form.avatar" class="avatar-upload" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
-            </el-form-item>
-            <el-form-item label="内容" prop="content">
-              <editor v-model="form.content" :isClear="isClear"></editor>
             </el-form-item>
             <el-form-item label="上线状态" prop="status">
               <el-switch
@@ -152,10 +192,9 @@
 </template>
 <script>
 import Editor from "@/components/editor.vue";
-import Cover from "@/components/coverPicture.vue";
 import Avatar from "@/components/avatar.vue";
 export default {
-  components: { Editor, Cover, Avatar },
+  components: { Editor, Avatar },
   data() {
     return {
       loading: false,
@@ -168,10 +207,20 @@ export default {
       },
       form: {
         id: "",
-        title: "", //标题
-        image: "", //封面
-        content: "", //简介
-        status: "1" //状态
+        username: "",
+        pwd: "",
+        nickname: "",
+        avatar: "",
+        status: ""
+        // name: "",
+        // sex: "",
+        // age: "",
+        // birthday: "",
+        // address: "",
+        // email: "",
+        // phone: "",
+        // identity: "",
+        // self_description: ""
       },
       openAddEditDialog: false,
       isDialog: false
@@ -230,12 +279,12 @@ export default {
     uploadSuccess(res, file, fileList) {
       res.code
         ? this.$message.error(res.data.error)
-        : (this.form.image = res.data.img);
+        : (this.form.avatar = res.data.img);
     },
     //获取数据列表
     getDataList() {
       this.loading = true;
-      this.$api.getAboutList(this.search).then(res => {
+      this.$api.getUserList(this.search).then(res => {
         this.dataList = res.data || [];
         this.loading = false;
       });
@@ -255,14 +304,12 @@ export default {
     addEdit() {
       this.loading = true;
 
-      this.$api[this.form.id ? "editAbout" : "addAbout"](this.form).then(
-        res => {
-          this.$message[res.code ? "error" : "success"](res.data.message);
-          if (res.code) return;
-          this.openAddEditDialog = false;
-          this.getDataList();
-        }
-      );
+      this.$api[this.form.id ? "editUser" : "addUser"](this.form).then(res => {
+        this.$message[res.code ? "error" : "success"](res.data.message);
+        if (res.code) return;
+        this.openAddEditDialog = false;
+        this.getDataList();
+      });
       this.loading = false;
     }
   },
@@ -307,5 +354,17 @@ export default {
 .el-upload-image {
   width: 60px;
   height: 60px;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
 }
 </style>

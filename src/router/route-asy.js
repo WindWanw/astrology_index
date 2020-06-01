@@ -22,28 +22,53 @@ const asyRoute = [{
             needLogin: true, //需要登录
         },
         children: [{
-            path: '/about',
-            name: 'about',
-            component: route.about,
-            meta: {
-                parent: '后台管理',
-                name: '关于我们',
-                iconfont: 'iconfont iconnb-',
-                needLogin: true, //需要登录
-            },
-            children: [{
-                path: '/description',
-                name: 'description',
-                component: route.description,
+                path: '/adminUser',
+                name: 'adminUser',
+                component: route.adminUser,
                 meta: {
-                    parent: '关于我们',
-                    name: '相关描述',
-                    iconfont: 'iconfont icon-wenbenmiaoshu',
+                    parent: '后台管理',
+                    name: '用户管理',
+                    iconfont: 'iconfont iconyonghu',
                     needLogin: true, //需要登录
                 },
-                children: []
-            }, ]
-        }, ]
+                children: [{
+                    path: '/adminUserList',
+                    name: 'adminUserList',
+                    component: route.adminUserList,
+                    meta: {
+                        parent: '用户管理',
+                        name: '用户列表',
+                        iconfont: 'iconfont icondashujukeshihuaico-',
+                        needLogin: true, //需要登录
+                    },
+                    children: []
+                }],
+
+            },
+            {
+                path: '/about',
+                name: 'about',
+                component: route.about,
+                meta: {
+                    parent: '后台管理',
+                    name: '关于我们',
+                    iconfont: 'iconfont iconnb-',
+                    needLogin: true, //需要登录
+                },
+                children: [{
+                    path: '/description',
+                    name: 'description',
+                    component: route.description,
+                    meta: {
+                        parent: '关于我们',
+                        name: '相关描述',
+                        iconfont: 'iconfont icon-wenbenmiaoshu',
+                        needLogin: true, //需要登录
+                    },
+                    children: []
+                }]
+            },
+        ]
     },
     {
         path: '/index',

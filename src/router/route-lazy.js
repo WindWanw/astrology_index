@@ -18,6 +18,10 @@ const home = () =>
 /**************************后台管理**************************/
 const admin = () =>
 	import( /* webpackChunkName: "admin" */ '../views/admin')
+const adminUser = () =>
+	import( /* webpackChunkName: "adminUser" */ '../views/admin/adminUser')
+const adminUserList = () =>
+	import( /* webpackChunkName: "adminUserList" */ '../views/admin/adminUser/adminUserList.vue')
 const about = () =>
 	import( /* webpackChunkName: "about" */ '../views/admin/about')
 const description = () =>
@@ -50,6 +54,8 @@ export default {
 	home,
 
 	admin,
+	adminUser,
+	adminUserList,
 	about,
 	description,
 

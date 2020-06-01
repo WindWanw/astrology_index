@@ -22,6 +22,17 @@ export default {
         return fetchPost('common/uploadFile', params);
     },
 
+    //用户管理
+    getUserList(params) {
+        return fetchGet('auth/user/getUserList', params);
+    },
+    addUser(params) {
+        return fetchPost('auth/user/addUserInfo', params);
+    },
+    editUser(params) {
+        return fetchPost('auth/user/editUserInfo', params);
+    },
+
     //关于
     getAboutList(params) {
         return fetchGet('auth/about/getAboutList', params);
