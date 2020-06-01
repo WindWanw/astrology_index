@@ -22,53 +22,29 @@ const asyRoute = [{
             needLogin: true, //需要登录
         },
         children: [{
-                path: '/adminUser',
-                name: 'adminUser',
-                component: route.adminUser,
+            path: '/adminUser',
+            name: 'adminUser',
+            component: route.adminUser,
+            meta: {
+                parent: '后台管理',
+                name: '用户管理',
+                iconfont: 'iconfont iconyonghu',
+                needLogin: true, //需要登录
+            },
+            children: [{
+                path: '/adminUserList',
+                name: 'adminUserList',
+                component: route.adminUserList,
                 meta: {
-                    parent: '后台管理',
-                    name: '用户管理',
-                    iconfont: 'iconfont iconyonghu',
+                    parent: '用户管理',
+                    name: '用户列表',
+                    iconfont: 'iconfont icondashujukeshihuaico-',
                     needLogin: true, //需要登录
                 },
-                children: [{
-                    path: '/adminUserList',
-                    name: 'adminUserList',
-                    component: route.adminUserList,
-                    meta: {
-                        parent: '用户管理',
-                        name: '用户列表',
-                        iconfont: 'iconfont icondashujukeshihuaico-',
-                        needLogin: true, //需要登录
-                    },
-                    children: []
-                }],
+                children: []
+            }],
 
-            },
-            {
-                path: '/about',
-                name: 'about',
-                component: route.about,
-                meta: {
-                    parent: '后台管理',
-                    name: '关于我们',
-                    iconfont: 'iconfont iconnb-',
-                    needLogin: true, //需要登录
-                },
-                children: [{
-                    path: '/description',
-                    name: 'description',
-                    component: route.description,
-                    meta: {
-                        parent: '关于我们',
-                        name: '相关描述',
-                        iconfont: 'iconfont icon-wenbenmiaoshu',
-                        needLogin: true, //需要登录
-                    },
-                    children: []
-                }]
-            },
-        ]
+        }, ]
     },
     {
         path: '/index',
@@ -81,27 +57,27 @@ const asyRoute = [{
             needLogin: true, //需要登录
         },
         children: [{
-            path: '/abouts',
-            name: 'abouts',
-            component: route.abouts,
+            path: '/about',
+            name: 'about',
+            component: route.about,
             meta: {
                 parent: '前台管理',
                 name: '关于我们',
-                iconfont: 'iconfont iconhome_icon',
+                iconfont: 'iconfont iconnb-',
                 needLogin: true, //需要登录
             },
             children: [{
-                path: '/descriptions',
-                name: 'descriptions',
-                component: route.descriptions,
+                path: '/description',
+                name: 'description',
+                component: route.description,
                 meta: {
                     parent: '关于我们',
                     name: '相关描述',
-                    iconfont: 'iconfont iconhome_icon',
+                    iconfont: 'iconfont icon-wenbenmiaoshu',
                     needLogin: true, //需要登录
                 },
                 children: []
-            }, ]
+            }]
         }, ]
     },
     {
@@ -147,7 +123,18 @@ const asyRoute = [{
                     iconfont: 'iconfont iconqiantaicaidan',
                     needLogin: true, //需要登录
                 },
-                children: []
+                children: [{
+                    path: '/spanner',
+                    name: 'spanner',
+                    component: route.spanner,
+                    meta: {
+                        parent: '前台设置',
+                        name: '导航设置',
+                        iconfont: 'iconfont iconshouye1',
+                        needLogin: true, //需要登录
+                    },
+                    children: []
+                }, ]
             },
         ]
     },

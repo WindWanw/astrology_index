@@ -22,20 +22,16 @@ const adminUser = () =>
 	import( /* webpackChunkName: "adminUser" */ '../views/admin/adminUser')
 const adminUserList = () =>
 	import( /* webpackChunkName: "adminUserList" */ '../views/admin/adminUser/adminUserList.vue')
-const about = () =>
-	import( /* webpackChunkName: "about" */ '../views/admin/about')
-const description = () =>
-	import( /* webpackChunkName: "description" */ '../views/admin/about/description.vue')
 
 
 
 /**************************前台管理**************************/
 const index = () =>
 	import( /* webpackChunkName: "index" */ '../views/index')
-const abouts = () =>
-	import( /* webpackChunkName: "about" */ '../views/index/abouts')
-const descriptions = () =>
-	import( /* webpackChunkName: "description" */ '../views/index/abouts/descriptions.vue')
+const about = () =>
+	import( /* webpackChunkName: "about" */ '../views/index/about')
+const description = () =>
+	import( /* webpackChunkName: "description" */ '../views/index/about/description.vue')
 
 /**************************系统设置**************************/
 const system = () =>
@@ -46,7 +42,9 @@ const wordsList = () =>
 	import( /* webpackChunkName: "wordsList" */ '../views/system/adminSystem/wordsList.vue')
 
 const indexSystem = () =>
-	import( /* webpackChunkName: "indexSystem" */ '../views/system/index')
+	import( /* webpackChunkName: "indexSystem" */ '../views/system/indexSystem')
+const spanner = () =>
+	import( /* webpackChunkName: "spanner" */ '../views/system/indexSystem/spanner.vue')
 export default {
 	login,
 	notFound,
@@ -56,15 +54,15 @@ export default {
 	admin,
 	adminUser,
 	adminUserList,
-	about,
-	description,
+
 
 	index,
-	abouts,
-	descriptions,
+	about,
+	description,
 
 	system,
 	adminSystem,
 	wordsList,
-	indexSystem
+	indexSystem,
+	spanner
 }

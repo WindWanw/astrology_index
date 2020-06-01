@@ -47,9 +47,6 @@
         <el-table-column prop="image" label="封面图" align="center"></el-table-column>
         <el-table-column prop="title" label="标题" align="center"></el-table-column>
         <el-table-column prop="content" label="内容" align="center"></el-table-column>
-        <el-table-column prop="user" label="添加者" align="center">
-          <template slot-scope="scope">{{scope.row.user.nickname}}</template>
-        </el-table-column>
         <el-table-column prop="create_time" label="添加时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">

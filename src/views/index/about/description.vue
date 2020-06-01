@@ -43,11 +43,13 @@
         v-loading="loading"
         class="user-table"
       >
-        <el-table-column prop="id" label="ID" align="center"></el-table-column>
+        <el-table-column label="图标" align="center">
+          <template slot-scope="scope">
+            <i class="iconfont" :class="scope.row.icon"></i>
+          </template>
+        </el-table-column>
         <el-table-column prop="image" label="封面图" align="center">
           <template slot-scope="scope">
-            <!-- <cover :url="scope.row.image"></cover> -->
-            <!-- <avatar :url="scope.row.image" :sizes="70" :fits="'fill'" @click.native="view(scope.row.image)"></avatar> -->
             <div @click="view(scope.row.image)">
               <avatar
                 :url="scope.row.image"
@@ -109,6 +111,9 @@
             <el-form-item label="标题" prop="title">
               <el-input v-model="form.title" size="mini" placeholder="请填写标题"></el-input>
             </el-form-item>
+            <el-form-item label="图标" prop="title">
+              <el-input v-model="form.icon" size="mini" placeholder="请输入symbol图标名称"></el-input>
+            </el-form-item>
             <el-form-item label="封面图" prop="image">
               <el-upload
                 class="avatar-uploader"
@@ -169,6 +174,7 @@ export default {
       form: {
         id: "",
         title: "", //标题
+        icon: "",
         image: "", //封面
         content: "", //简介
         status: "1" //状态
