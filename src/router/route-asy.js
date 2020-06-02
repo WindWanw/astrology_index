@@ -134,6 +134,17 @@ const asyRoute = [{
                         needLogin: true, //需要登录
                     },
                     children: []
+                }, {
+                    path: '/config',
+                    name: 'config',
+                    component: route.config,
+                    meta: {
+                        parent: '前台设置',
+                        name: '系统配置',
+                        iconfont: 'iconfont iconsetting',
+                        needLogin: true, //需要登录
+                    },
+                    children: []
                 }, ]
             },
         ]

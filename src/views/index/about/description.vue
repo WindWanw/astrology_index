@@ -157,10 +157,9 @@
 </template>
 <script>
 import Editor from "@/components/editor.vue";
-import Cover from "@/components/coverPicture.vue";
 import Avatar from "@/components/avatar.vue";
 export default {
-  components: { Editor, Cover, Avatar },
+  components: { Editor, Avatar },
   data() {
     return {
       loading: false,
