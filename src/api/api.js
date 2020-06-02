@@ -62,4 +62,13 @@ export default {
 
 
     //index
+    getSpannerList(params) {
+        return fetchGet('auth/system/getSpannerList', params);
+    },
+    addSpanner(params) {
+        return fetchPost('auth/system/addSpannerInfo', params);
+    },
+    editSpanner(params) {
+        return fetchPost('auth/system/editSpannerInfo', params);
+    },
 }

@@ -11,10 +11,10 @@
         >返回</el-button>
       </div>
       <div class="search_wrap">
-        <el-input
+        <!-- <el-input
           clearable
           v-model="search.title"
-          placeholder="请输入博客名称"
+          placeholder="请输入"
           size="mini"
           @keyup.enter.native="findData"
         ></el-input>
@@ -24,7 +24,7 @@
           size="mini"
           @click="findData"
           style="margin-left:5px;"
-        >搜索</el-button>
+        >搜索</el-button>-->
         <el-button
           type="primary"
           class="iconfont icontianjia1"
@@ -36,7 +36,7 @@
     </div>
     <div class="content">
       <el-table
-        :data="dataList.list"
+        :data="dataList.data"
         stripe
         border
         style="width:100%"
@@ -44,9 +44,23 @@
         class="user-table"
       >
         <el-table-column prop="id" label="ID" align="center"></el-table-column>
-        <el-table-column prop="image" label="封面图" align="center"></el-table-column>
-        <el-table-column prop="title" label="标题" align="center"></el-table-column>
-        <el-table-column prop="content" label="内容" align="center"></el-table-column>
+        <el-table-column prop="title" label="标题" align="center">
+          <template slot-scope="scope">
+            <i class="iconfont spanner-icon" :class="scope.row.icon"></i>
+            <span>{{scope.row.title}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="en" label="英文" align="center"></el-table-column>
+        <el-table-column prop="url" label="路由" align="center"></el-table-column>
+        <el-table-column prop="sort" label="排序" align="center"></el-table-column>
+        <el-table-column prop="status" label="状态" align="center">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.status ? 'success' : 'danger'"
+              :title="scope.row.status ? '点击禁用' : '点击启用'"
+            >{{scope.row.status | getStatus}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="create_time" label="添加时间" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -82,28 +96,22 @@
       >
         <div>
           <el-form label-position="right" label-width="120px" :model="form">
-            <el-form-item label="文章标题" prop="title">
-              <el-input
-                v-model="form.title"
-                size="mini"
-                placeholder="请填写博客文章标题"
-                suffix-icon="iconfont iconyonghu3"
-              ></el-input>
+            <el-form-item label="导航名称" prop="title">
+              <el-input v-model="form.title" size="mini" placeholder="请填写导航名称"></el-input>
             </el-form-item>
-            <el-form-item label="文章封面" prop="image">
-              <el-upload
-                class="avatar-uploader"
-                :action="`${axios.defaults.baseURL}/upload/uploadFile/upload/upload_article_image`"
-                :show-file-list="false"
-                :on-success="uploadSuccess"
-                :before-upload="beforeUpload"
-              >
-                <img v-if="form.image" :src="form.image" class="avatar-upload" />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+            <el-form-item label="导航英文" prop="en">
+              <el-input v-model="form.en" size="mini" placeholder="请填写导航英文名称，为空将自动翻译导航名称"></el-input>
             </el-form-item>
-            <el-form-item label="文章内容" prop="content">
-              <editor v-model="form.content" :isClear="isClear"></editor>
+            <el-form-item label="导航图标" prop="icon">
+              <el-input v-model="form.icon" size="mini" placeholder="请输入导航图标">
+                <i slot="suffix" class="iconfont iconshouye1"></i>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="导航路由" prop="url">
+              <el-input v-model="form.url" size="mini" placeholder="请输入导航路由名"></el-input>
+            </el-form-item>
+            <el-form-item label="导航排序" prop="sort">
+              <el-input type="number" v-model="form.sort" size="mini" placeholder="请输入导航排序，倒序排序"></el-input>
             </el-form-item>
             <el-form-item label="上线状态" prop="status">
               <el-switch
@@ -116,15 +124,20 @@
                 inactive-text="禁用"
               ></el-switch>
             </el-form-item>
+            <el-form-item label="导航描述" prop="description">
+              <el-input
+                :autosize="{ minRows: 2, maxRows: 4}"
+                maxlength="200"
+                show-word-limit
+                v-model="form.description"
+                placeholder="请输入导航描述"
+                type="textarea"
+              ></el-input>
+            </el-form-item>
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer btn">
-          <el-button
-            class="iconfont iconqueding3"
-            size="mini"
-            type="success"
-            @click="editArticle('3')"
-          >确定修改</el-button>
+          <el-button class="iconfont iconqueding3" size="mini" type="success" @click="addEdit">确定修改</el-button>
           <el-button class="iconfont iconquxiao" size="mini" @click="openAddEditDialog = false">取 消</el-button>
         </span>
       </el-dialog>
@@ -141,18 +154,19 @@ export default {
       isShow: false,
       isClear: false,
       dataList: [],
-      articleType: [],
-      modalityType: [],
       search: {
         page: 1,
         limit: 10
       },
       form: {
         id: "",
-        title: "", //标题
-        image: "", //封面
-        content: "", //简介
-        status: "1" //状态
+        title: "",
+        en: "",
+        icon: "",
+        url: "",
+        sort: "",
+        status: "",
+        description: ""
       },
       openAddEditDialog: false
     };
@@ -172,7 +186,6 @@ export default {
     //返回
     reset() {
       this.$func.setDefaultData(this.search);
-      this.search.status = "3";
       this.getDataList();
       this.isShow = false;
     },
@@ -191,24 +204,10 @@ export default {
       this.getDataList();
       this.isShow = true;
     },
-    //上传图片前
-    beforeUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isLt2M;
-    },
-    //上传成功后
-    uploadSuccess(res, file, fileList) {
-      res.code
-        ? this.$message.error(res.data.error)
-        : (this.form.image = res.data.img);
-    },
     //获取数据列表
     getDataList() {
       this.loading = true;
-      this.$api.getAboutList(this.search).then(res => {
+      this.$api.getSpannerList(this.search).then(res => {
         this.dataList = res.data || [];
         this.loading = false;
       });
@@ -222,6 +221,19 @@ export default {
       } else {
         this.$func.setAssignData(this.form, item);
       }
+    },
+    addEdit() {
+      this.loading = true;
+
+      this.$api[this.form.id ? "editSpanner" : "addSpanner"](this.form).then(
+        res => {
+          this.$message[res.code ? "error" : "success"](res.data.message);
+          if (res.code) return;
+          this.getDataList();
+          this.openAddEditDialog = false;
+        }
+      );
+      this.loading = false;
     }
   },
   created() {
@@ -235,27 +247,6 @@ export default {
   background-color: #fff;
   padding: 20px;
   box-sizing: border-box;
-}
-.idcard-image {
-  display: flex;
-  justify-content: flex-start;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 150px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
-}
-
-.idcard-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 250px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
 }
 .el-tag + .el-tag {
   margin-left: 10px;
@@ -273,6 +264,9 @@ export default {
   vertical-align: bottom;
 }
 .el-button {
+  margin: 0 10px;
+}
+.spanner-icon{
   margin: 0 10px;
 }
 </style>
