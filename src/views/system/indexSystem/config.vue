@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="content-7">
-        <div class="content-7-1">
+        <!-- <div class="content-7-1">
           <div>
             <span>前台标题语言：</span>
           </div>
@@ -28,7 +28,7 @@
               <el-radio-button label="en-US">英文</el-radio-button>
             </el-radio-group>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -44,19 +44,21 @@ export default {
   watch: {},
   methods: {
     setLanguage(data) {
-      console.log(data);
+      this.$api.setIndexLanguage({ language: data }).then(res => {
+        this.$message[res.code ? "error" : "success"](res.data.message);
+        this.getLanguage();
+      });
     },
-    //获取数据列表
-    getDataList() {
-      this.loading = true;
-      this.$api.getSpannerList(this.search).then(res => {
-        this.dataList = res.data || [];
-        this.loading = false;
+    getLanguage() {
+      this.$api.getIndexLanguage().then(res => {
+        if (!res.code) {
+          this.language = res.data.data;
+        }
       });
     }
   },
   created() {
-    this.getDataList();
+    this.getLanguage();
   }
 };
 </script>

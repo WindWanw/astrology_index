@@ -71,4 +71,10 @@ export default {
     editSpanner(params) {
         return fetchPost('auth/system/editSpannerInfo', params);
     },
+    setIndexLanguage(params) {
+        return fetchPost('auth/system/setIndexLanguage', params);
+    },
+    getIndexLanguage(params) {
+        return fetchGet('auth/system/getIndexLanguage', params);
+    }
 }
