@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       loading: false,
-      language: "zh-CN"
+      language: ""
     };
   },
   watch: {},
@@ -52,7 +52,7 @@ export default {
     getLanguage() {
       this.$api.getIndexLanguage().then(res => {
         if (!res.code) {
-          this.language = res.data.data;
+          this.language = res.data.data || "zh-CN";
         }
       });
     }
