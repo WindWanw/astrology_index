@@ -56,7 +56,7 @@ export default {
 
         this.$message[res.code ? 'error' : 'success'](res.data.message);
         if(res.code) return ;
-        localStorage.setItem("token",res.data.list.user_token.token);
+        localStorage.setItem("token",res.data.list.token.token);
         this.$router.replace(this.url);
       });
     },
