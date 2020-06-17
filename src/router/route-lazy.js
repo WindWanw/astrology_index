@@ -47,6 +47,8 @@ const spanner = () =>
 	import( /* webpackChunkName: "spanner" */ '../views/system/indexSystem/spanner.vue')
 const config = () =>
 	import( /* webpackChunkName: "config" */ '../views/system/indexSystem/config.vue')
+const cache = () =>
+	import( /* webpackChunkName: "cache" */ '../views/system/cache.vue')
 export default {
 	login,
 	notFound,
@@ -67,5 +69,6 @@ export default {
 	wordsList,
 	indexSystem,
 	spanner,
-	config
+	config,
+	cache
 }

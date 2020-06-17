@@ -19,14 +19,6 @@ Vue.prototype.axios = axios;
 
 axios.defaults.timeout = 10000; //响应时间
 
-// const h = window.location.href;
-
-// if (h.indexOf('localhost') !== -1 || h.indexOf('192.168.0.104') !== -1) {
-// 	axios.defaults.baseURL = "/dev/admin/"; //默认请求域名
-// } else {
-// 	axios.defaults.baseURL = "/api/admin/"; //默认请求域名
-// }
-
 axios.defaults.baseURL = "/api/admin/"; //默认请求域名
 
 

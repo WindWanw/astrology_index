@@ -76,5 +76,14 @@ export default {
     },
     getIndexLanguage(params) {
         return fetchGet('auth/system/getIndexLanguage', params);
-    }
+    },
+
+
+    //
+    getImageCacheType(params) {
+        return fetchGet('auth/system/getImageCacheType', params);
+    },
+    clearImageCache(params) {
+        return fetchPost('auth/system/clearImageCache', params);
+    },
 }

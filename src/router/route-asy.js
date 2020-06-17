@@ -147,6 +147,18 @@ const asyRoute = [{
                     children: []
                 }, ]
             },
+            {
+                path: '/cache',
+                name: 'cache',
+                component: route.cache,
+                meta: {
+                    parent: '系统设置',
+                    name: '清除缓存',
+                    iconfont: 'iconfont iconhuancunguanli',
+                    needLogin: true, //需要登录
+                },
+                children: []
+            },
         ]
     },
 ];
