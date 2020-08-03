@@ -10,6 +10,8 @@ const login = () =>
 	import( /* webpackChunkName: "login" */ '../views/login.vue')
 const notFound = () =>
 	import( /* webpackChunkName: "notFound" */ '../views/notFound.vue')
+const yoga = () =>
+	import( /* webpackChunkName: "yoga" */ '../views/yoga.vue')
 const layout = () =>
 	import( /* webpackChunkName: "layout" */ '../views/layout.vue')
 const home = () =>
@@ -52,6 +54,7 @@ const cache = () =>
 export default {
 	login,
 	notFound,
+	yoga,
 	layout,
 	home,
 

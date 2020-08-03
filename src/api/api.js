@@ -15,6 +15,9 @@ export default {
     login(params) {
         return fetchPost('login', params);
     },
+    yoga(params) {
+        return fetchPost('yoga', params);
+    },
     getUserInfo(params) {
         return fetchGet('auth/home/getUserInfo', params);
     },

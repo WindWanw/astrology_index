@@ -17,6 +17,11 @@ const routes = [{
         component: route.notFound
     },
     {
+        path: '/yoga',
+        name: 'yoga',
+        component: route.yoga
+    },
+    {
         path: '/layout',
         name: 'layout',
         component: route.layout,
