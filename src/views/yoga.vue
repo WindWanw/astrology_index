@@ -21,7 +21,7 @@
                   v-model="item.time"
                   size="mini"
                   clearable
-                  format="HH:mm"
+                  value-format="HH:mm"
                   range-separator="至"
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
@@ -257,44 +257,6 @@ export default {
           value: "Red",
         },
       ],
-      course: {
-        time: "",
-        one: {
-          title: "",
-          color: "",
-          icon: "",
-        },
-        two: {
-          title: "",
-          color: "",
-          icon: "",
-        },
-        three: {
-          title: "",
-          color: "",
-          icon: "",
-        },
-        four: {
-          title: "",
-          color: "",
-          icon: "",
-        },
-        five: {
-          title: "",
-          color: "",
-          icon: "",
-        },
-        six: {
-          title: "",
-          color: "",
-          icon: "",
-        },
-        seven: {
-          title: "",
-          color: "",
-          icon: "",
-        },
-      },
       form: {
         title: "禅·瑜伽",
         content: [
@@ -343,7 +305,44 @@ export default {
   computed: {},
   methods: {
     add(i) {
-      this.form.content.splice(i + 1, 0, this.course);
+      this.form.content.splice(i + 1, 0, {
+        time: "",
+        one: {
+          title: "",
+          color: "",
+          icon: "",
+        },
+        two: {
+          title: "",
+          color: "",
+          icon: "",
+        },
+        three: {
+          title: "",
+          color: "",
+          icon: "",
+        },
+        four: {
+          title: "",
+          color: "",
+          icon: "",
+        },
+        five: {
+          title: "",
+          color: "",
+          icon: "",
+        },
+        six: {
+          title: "",
+          color: "",
+          icon: "",
+        },
+        seven: {
+          title: "",
+          color: "",
+          icon: "",
+        },
+      });
     },
     del(i) {
       if (this.form.content && this.form.content.length > 1) {
@@ -355,6 +354,7 @@ export default {
       }
     },
     sure() {
+      // console.log(this.form);return ;
       this.$api.yoga(this.form).then((res) => {
         if (res.code) return this.$error(res.data.message);
 
